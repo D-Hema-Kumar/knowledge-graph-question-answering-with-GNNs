@@ -10,6 +10,7 @@ matplotlib = "*"
 networkx = "*"
 torch = "*"
 tqdm = "*"
+black = "*"
 
 [dev-packages]
 
