@@ -1,4 +1,8 @@
 import torch
+import pandas as pd
+import numpy as np
+import os
+from loguru import logger
 
 
 class LLMEncoder:
@@ -6,7 +10,7 @@ class LLMEncoder:
         self.tokenizer = tokenizer
         self.model = model
 
-    def encode(self, input_sentence):
+    def encode_sentence(self, input_sentence):
         """
         Encode the given sentence using the language model.
         """
@@ -20,6 +24,43 @@ class LLMEncoder:
         )
         return normalized_representation.numpy()[0]
 
+    def generate_encodings_dict(self, list_input_sentences):
+        """
+        Generate encodings dict for a list of input sentences.
+        """
+        logger.info("Generating encodings.")
+        res = {}
+        for sentence in list_input_sentences:
+            res[sentence] = self.encode_sentence(sentence)
+        return res
+
+    def save_encodings(self, encodings, file_path):
+        """
+        Save encodings to disk.
+        """
+        logger.info("Saving encodings.")
+        np.savez(file_path, encodings)
+
+    def generate_encodings_for_entities_labels(self, entities_labels_path, base_path):
+        logger.info("Generating encodings for Entities.")
+        entities_data = pd.read_csv(entities_labels_path, nrows=10)
+        mask = entities_data.iloc[:, 1].isna()
+        entities_data.loc[mask, "label"] = (
+            entities_data[entities_data.iloc[:, 1].isna()]
+            .iloc[:, 0]
+            .apply(lambda x: x.split("/")[-1])
+        )  # deal with missing labels
+        encodings = self.generate_encodings_dict(entities_data["label"].to_list())
+        self.save_encodings(encodings, os.path.join(base_path, "entities"))
+
+    def generate_encodings_for_properties_labels(
+        self, properties_labels_path, base_path
+    ):
+        logger.info("Generating encodings for Properties.")
+        properties_data = pd.read_csv(properties_labels_path)
+        encodings = self.generate_encodings_dict(properties_data["label"].to_list())
+        self.save_encodings(encodings, os.path.join(base_path, "properties"))
+
 
 if __name__ == "__main__":
     from transformers import RobertaTokenizer, RobertaModel
@@ -27,4 +68,10 @@ if __name__ == "__main__":
     tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
     model = RobertaModel.from_pretrained("roberta-base")
     llm_encoder = LLMEncoder(tokenizer, model)
-    print(llm_encoder.encode("hello world"))
+    llm_encoder.generate_encodings_for_entities_labels(
+        entities_labels_path="data/VAD_entities_labels.csv", base_path="data/embeddings"
+    )
+    llm_encoder.generate_encodings_for_properties_labels(
+        properties_labels_path="data/VAD_properties_labels.csv",
+        base_path="data/embeddings",
+    )

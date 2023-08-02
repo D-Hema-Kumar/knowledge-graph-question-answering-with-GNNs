@@ -14,6 +14,7 @@ black = "*"
 torch-geometric = "*"
 pandas = "*"
 transformers = "*"
+loguru = "*"
 
 [dev-packages]
 
