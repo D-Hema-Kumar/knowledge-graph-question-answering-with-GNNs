@@ -11,6 +11,9 @@ networkx = "*"
 torch = "*"
 tqdm = "*"
 black = "*"
+torch-geometric = "*"
+pandas = "*"
+transformers = "*"
 
 [dev-packages]
 
