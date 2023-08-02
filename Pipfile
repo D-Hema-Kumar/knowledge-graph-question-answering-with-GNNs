@@ -15,6 +15,7 @@ pandas = "*"
 transformers = "*"
 loguru = "*"
 tqdm = "*"
+pytorch-lightning = "*"
 
 [dev-packages]
 

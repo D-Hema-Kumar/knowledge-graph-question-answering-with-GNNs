@@ -5,14 +5,19 @@ from constants import (
     ENTITIES_LABELS_PATH,
     PROPERTIES_LABELS_PATH,
     EMBEDDINGS_PATH,
+    NUM_EPOCHS,
 )
 import torch
 import torch.nn.functional as F
-from GNN import GCN, evaluate_model
+from GNN import GCN, MLP, evaluate_model
 from loguru import logger
+import sys
+
+logger.remove()
+logger.add(sys.stderr, level="INFO")
 
 ## CREATE DATA
-logger.info("Creating data.")
+logger.info("Creating Data object.")
 
 data_builder = DataBuilder(
     triples_path=TRIPLES_PATH,
@@ -36,10 +41,30 @@ data = Data(
     test_mask=test_mask,
 )
 
+## TRAIN MLP
+logger.info("Training MLP.")
+model = MLP(
+    num_node_features=data.num_node_features, num_hidden_layers=16, num_classes=2
+)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+model.train()
+for epoch in range(NUM_EPOCHS):
+    optimizer.zero_grad()
+    out = model(data)
+    loss = F.nll_loss(out[data.train_mask], data.y[data.train_mask])
+    loss.backward()
+    optimizer.step()
+    logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")
+
+## EVALUATE
+logger.info("Evaluating.")
+precision, recall, F1 = evaluate_model(model, data)
+logger.info(f"Precision: {precision:.4f}")
+logger.info(f"Recall: {recall:.4f}")
+logger.info(f"F1: {F1:.4f}")
+
 ## TRAIN GNN
 logger.info("Training GNN.")
-
-NUM_EPOCHS = 1000
 
 model = GCN(
     num_node_features=data.num_node_features, num_hidden_layers=16, num_classes=2
@@ -52,6 +77,7 @@ for epoch in range(NUM_EPOCHS):
     loss = F.nll_loss(out[data.train_mask], data.y[data.train_mask])
     loss.backward()
     optimizer.step()
+    logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")
 
 ## EVALUATE
 logger.info("Evaluating.")

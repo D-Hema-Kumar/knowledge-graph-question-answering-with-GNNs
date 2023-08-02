@@ -40,7 +40,7 @@ class DataBuilder:
         """
         Return node feature vectors.
         """
-        embeddings = (
+        embeddings = np.array(
             self.entities_data["label"].map(self.entities_label_to_embeddings).to_list()
         )
         return torch.tensor(embeddings)

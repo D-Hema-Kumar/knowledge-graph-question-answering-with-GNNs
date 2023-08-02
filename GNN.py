@@ -1,6 +1,22 @@
 import torch
 from torch_geometric.nn import GCNConv
 import torch.nn.functional as F
+from torch.nn import Linear
+
+
+class MLP(torch.nn.Module):
+    def __init__(self, num_node_features, num_hidden_layers, num_classes):
+        super().__init__()
+        self.lin1 = Linear(num_node_features, num_hidden_layers)
+        self.lin2 = Linear(num_hidden_layers, num_classes)
+
+    def forward(self, data):
+        x = data.x
+        x = self.lin1(x)
+        x = F.relu(x)
+        x = F.dropout(x, training=self.training)
+        x = self.lin2(x)
+        return F.log_softmax(x, dim=1)
 
 
 class GCN(torch.nn.Module):
@@ -15,7 +31,6 @@ class GCN(torch.nn.Module):
         x = F.relu(x)
         x = F.dropout(x, training=self.training)
         x = self.conv2(x, edge_index)
-
         return F.log_softmax(x, dim=1)
 
 
