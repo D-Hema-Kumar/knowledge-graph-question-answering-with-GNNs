@@ -39,11 +39,11 @@ class LLMEncoder:
         Save encodings to disk.
         """
         logger.info("Saving encodings.")
-        np.savez(file_path, encodings)
+        np.savez(file_path, **encodings)
 
     def generate_encodings_for_entities_labels(self, entities_labels_path, base_path):
         logger.info("Generating encodings for Entities.")
-        entities_data = pd.read_csv(entities_labels_path, nrows=10)
+        entities_data = pd.read_csv(entities_labels_path)
         mask = entities_data.iloc[:, 1].isna()
         entities_data.loc[mask, "label"] = (
             entities_data[entities_data.iloc[:, 1].isna()]

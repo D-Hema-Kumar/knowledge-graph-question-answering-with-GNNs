@@ -1,5 +1,7 @@
 import torch
 import pandas as pd
+import numpy as np
+import os
 
 
 class DataBuilder:
@@ -9,6 +11,7 @@ class DataBuilder:
         entities_labels_path,
         properties_labels_path,
         embeddings_path,
+        labeler=None,
     ):
         self.triples_data = pd.read_csv(triples_path)
         self.entities_data = pd.read_csv(entities_labels_path)
@@ -19,27 +22,52 @@ class DataBuilder:
             .apply(lambda x: x.split("/")[-1])
         )  # deal with missing labels
         self.properties_data = pd.read_csv(properties_labels_path)
-        self.entity_to_id = {
-            string: index
-            for index, string in enumerate(self.entities_data.iloc[:, 0].to_list())
-        }
-        self.properties_to_id = {
-            string: index
-            for index, string in enumerate(self.properties_data.iloc[:, 0].to_list())
-        }
-        # self.llm_encoder = llm_encoder
+        self.entities_label_to_embeddings = {}
+        loaded_data = np.load(
+            os.path.join(embeddings_path, "entities.npz"), allow_pickle=True
+        )
+        for key in loaded_data.keys():
+            self.entities_label_to_embeddings[key] = loaded_data[key]
+        self.properties_label_to_embeddings = {}
+        loaded_data = np.load(
+            os.path.join(embeddings_path, "properties.npz"), allow_pickle=True
+        )
+        for key in loaded_data.keys():
+            self.properties_label_to_embeddings[key] = loaded_data[key]
+        self.labeler = labeler
 
     def get_x(self):
         """
         Return node feature vectors.
         """
-        embeddings = self.entities_data["label"].apply(self.llm_encoder.encode)
+        embeddings = (
+            self.entities_data["label"].map(self.entities_label_to_embeddings).to_list()
+        )
         return torch.tensor(embeddings)
+
+    def get_y(self):
+        """
+        Return ground truth labels vector.
+        """
+        if self.labeler:
+            return torch.tensor(
+                [item for item in map(self.labeler, self.entities_data["uri"])]
+            )
+        raise Exception("No labeler defined.")
 
     def get_edge_index(self):
         """
         Return edge index list.
         """
-        subjects = self.triples_data.iloc[:, 0].map(self.entity_to_id)
-        objects = self.triples_data.iloc[:, 2].map(self.entity_to_id)
-        return torch.stack((torch.tensor(subjects), torch.tensor(objects)))
+        entity_to_id = {
+            string: index
+            for index, string in enumerate(self.entities_data.iloc[:, 0].to_list())
+        }
+        subjects = self.triples_data.iloc[:, 0].map(entity_to_id)
+        objects = self.triples_data.iloc[:, 2].map(entity_to_id)
+        return torch.stack(
+            (
+                torch.tensor(subjects, dtype=torch.long),
+                torch.tensor(objects, dtype=torch.long),
+            )
+        )

@@ -1,3 +1,4 @@
-TRIPLES_PATH = "./data/VAD_kg.csv"
-ENTITIES_PATH = "./data/vad_entities_labels.csv"
-RELATIONS_PATH = "./data/vad_properties_labels.csv"
+TRIPLES_PATH = "./data/VAD_triples.csv"
+ENTITIES_LABELS_PATH = "./data/VAD_entities_labels.csv"
+PROPERTIES_LABELS_PATH = "./data/VAD_properties_labels.csv"
+EMBEDDINGS_PATH = "./data/embeddings"
