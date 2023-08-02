@@ -17,7 +17,7 @@ logger.remove()
 logger.add(sys.stderr, level="INFO")
 
 ## CREATE DATA
-logger.info("Creating Data object.")
+logger.info("Creating Data object")
 
 data_builder = DataBuilder(
     triples_path=TRIPLES_PATH,
@@ -42,7 +42,7 @@ data = Data(
 )
 
 ## TRAIN MLP
-logger.info("Training MLP.")
+logger.info("Training MLP")
 model = MLP(
     num_node_features=data.num_node_features, num_hidden_layers=16, num_classes=2
 )
@@ -57,14 +57,12 @@ for epoch in range(NUM_EPOCHS):
     logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")
 
 ## EVALUATE
-logger.info("Evaluating.")
+logger.info("Evaluating")
 precision, recall, F1 = evaluate_model(model, data)
-logger.info(f"Precision: {precision:.4f}")
-logger.info(f"Recall: {recall:.4f}")
-logger.info(f"F1: {F1:.4f}")
+logger.info(f"Precision: {precision:.4f} --  Recall: {recall:.4f} -- F1: {F1:.4f}")
 
 ## TRAIN GNN
-logger.info("Training GNN.")
+logger.info("Training GNN")
 
 model = GCN(
     num_node_features=data.num_node_features, num_hidden_layers=16, num_classes=2
@@ -80,8 +78,6 @@ for epoch in range(NUM_EPOCHS):
     logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")
 
 ## EVALUATE
-logger.info("Evaluating.")
+logger.info("Evaluating")
 precision, recall, F1 = evaluate_model(model, data)
-logger.info(f"Precision: {precision:.4f}")
-logger.info(f"Recall: {recall:.4f}")
-logger.info(f"F1: {F1:.4f}")
+logger.info(f"Precision: {precision:.4f} --  Recall: {recall:.4f} -- F1: {F1:.4f}")
