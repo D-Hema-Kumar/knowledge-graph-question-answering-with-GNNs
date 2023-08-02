@@ -9,12 +9,12 @@ numpy = "*"
 matplotlib = "*"
 networkx = "*"
 torch = "*"
-tqdm = "*"
 black = "*"
 torch-geometric = "*"
 pandas = "*"
 transformers = "*"
 loguru = "*"
+tqdm = "*"
 
 [dev-packages]
 

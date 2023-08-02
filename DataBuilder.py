@@ -50,9 +50,7 @@ class DataBuilder:
         Return ground truth labels vector.
         """
         if self.labeler:
-            return torch.tensor(
-                [item for item in map(self.labeler, self.entities_data["uri"])]
-            )
+            return torch.tensor(list(map(self.labeler, self.entities_data["uri"])))
         raise Exception("No labeler defined.")
 
     def get_edge_index(self):
@@ -71,3 +69,17 @@ class DataBuilder:
                 torch.tensor(objects, dtype=torch.long),
             )
         )
+
+    def get_masks(self, percentage_train=0.7, percentage_val=0.2, percentage_test=0.1):
+        """
+        Return train, test and validation masks for nodes.
+        """
+        train_val_test = [0, 1, 2]
+        percentages = [percentage_train, percentage_val, percentage_test]
+        splits = np.random.choice(
+            train_val_test, len(self.entities_data), p=percentages
+        )
+        train_mask = splits == 0
+        val_mask = splits == 1
+        test_mask = splits == 2
+        return train_mask, val_mask, test_mask
