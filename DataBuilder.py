@@ -52,17 +52,35 @@ class DataBuilder:
         if self.labeler:
             return torch.tensor(list(map(self.labeler, self.entities_data["uri"])))
         raise Exception("No labeler defined.")
+    
+    def get_edge_type(self):
+        """
+        Return edge type list.
+        """
+        property_to_id = {
+            string: index
+            for index, string in enumerate(self.properties_data.iloc[:, 0].to_list())
+        }
+
+        properties = self.triples_data.iloc[:,1].map(property_to_id)
+        return torch.tensor(properties,dtype=torch.long)
 
     def get_edge_index(self):
         """
-        Return edge index list.
+        Return edge index list and edge type list.
         """
         entity_to_id = {
             string: index
             for index, string in enumerate(self.entities_data.iloc[:, 0].to_list())
         }
+
+        #property_to_id = {
+        #    string: index
+        #    for index, string in enumerate(self.properties_data.iloc[:, 0].to_list())
+        #}
         subjects = self.triples_data.iloc[:, 0].map(entity_to_id)
         objects = self.triples_data.iloc[:, 2].map(entity_to_id)
+        #properties = self.triples_data.iloc[:,1].map(property_to_id)
         return torch.stack(
             (
                 torch.tensor(subjects, dtype=torch.long),
