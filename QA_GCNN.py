@@ -1,10 +1,12 @@
 from torch_geometric.data import Data
-from DataBuilder import DataBuilder
+from DataBuilder import QADataBuilder
 from constants import (
     TRIPLES_PATH,
     ENTITIES_LABELS_PATH,
     PROPERTIES_LABELS_PATH,
     GRAPH_EMBEDDINGS_PATH,
+    QUESTIONS_ANSWERS_PATH,
+    QUESTIONS_EMBEDDINGS_PATH,
     NUM_EPOCHS,
 )
 import torch
@@ -19,44 +21,39 @@ logger.add(sys.stderr, level="INFO")
 ## CREATE DATA
 logger.info("Creating Data object")
 
-data_builder = DataBuilder(
+qa_data_builder = QADataBuilder(
     triples_path=TRIPLES_PATH,
     entities_labels_path=ENTITIES_LABELS_PATH,
     properties_labels_path=PROPERTIES_LABELS_PATH,
     embeddings_path=GRAPH_EMBEDDINGS_PATH,
-    labeler=(lambda x: 1 if "APQC" in x else 0),
+    questions_answers=QUESTIONS_ANSWERS_PATH,
+    questions_embeddings_path=QUESTIONS_EMBEDDINGS_PATH,
 )
 
-x = data_builder.get_x()
-edge_index = data_builder.get_edge_index()
-y = data_builder.get_y()
-train_mask, val_mask, test_mask = data_builder.get_masks()
+x = qa_data_builder.get_x()
+edge_index = qa_data_builder.get_edge_index()
 
 ## TRAIN MLP
 logger.info("Training MLP")
-model = MLP(num_node_features=x.shape[1], num_hidden_layers=16, num_classes=2)
+model = MLP(
+    num_node_features=(2 * x.shape[1]), num_hidden_layers=16, num_classes=2
+)  # we multiply x.shape by two so as to account for question embedding
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 model.train()
 
+train_mask, test_mask, val_mask = qa_data_builder.get_questions_masks()
 
-for question in questions:
-    labeler=(lambda z: 1 if is_answer(question, get_uri(z)))
-    y = get_y
-    x = x + embeddings(question)
-
-    data = Data(
-        x=x,
-        edge_index=edge_index,
-        y=y,
-        train_mask=train_mask,
-        val_mask=val_mask,
-        test_mask=test_mask,
-    )
+for question, embedding in qa_data_builder.questions_embeddings_masked(
+    train_mask
+):  # call the questions_iterator from the instance
+    x = torch.cat(x, torch.from_numpy(embedding), dim=0)
+    y = qa_data_builder.get_y(question=question)
+    data = Data(x=x, edge_index=edge_index, y=y)
 
     for epoch in range(NUM_EPOCHS):
         optimizer.zero_grad()
         out = model(data)
-        loss = F.nll_loss(out[data.train_mask], data.y[data.train_mask])
+        loss = F.nll_loss(out, data.y)
         loss.backward()
         optimizer.step()
         logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")

@@ -30,7 +30,7 @@ data_builder = DataBuilder(
 x = data_builder.get_x()
 edge_index = data_builder.get_edge_index()
 y = data_builder.get_y()
-train_mask, val_mask, test_mask = data_builder.get_masks()
+train_mask, val_mask, test_mask = data_builder.get_entities_masks()
 
 data = Data(
     x=x,
