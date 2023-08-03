@@ -1,0 +1,6 @@
+- [ ] Add edges to Graphs
+- [ ] Use RGCN
+- [ ] Train QA GNN with subgraphs
+    - [ ] ... 
+    - [ ] "perfect"  hop 2 subgraph
+- [ ] Change the Goldstandard to include non "Type" questions

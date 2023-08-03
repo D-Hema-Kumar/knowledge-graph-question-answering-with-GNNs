@@ -32,51 +32,34 @@ edge_index = data_builder.get_edge_index()
 y = data_builder.get_y()
 train_mask, val_mask, test_mask = data_builder.get_masks()
 
-data = Data(
-    x=x,
-    edge_index=edge_index,
-    y=y,
-    train_mask=train_mask,
-    val_mask=val_mask,
-    test_mask=test_mask,
-)
-
 ## TRAIN MLP
 logger.info("Training MLP")
-model = MLP(
-    num_node_features=data.num_node_features, num_hidden_layers=16, num_classes=2
-)
+model = MLP(num_node_features=x.shape[1], num_hidden_layers=16, num_classes=2)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 model.train()
 
-for epoch in range(NUM_EPOCHS):
-    optimizer.zero_grad()
-    out = model(data)
-    loss = F.nll_loss(out[data.train_mask], data.y[data.train_mask])
-    loss.backward()
-    optimizer.step()
-    logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")
 
-## EVALUATE
-logger.info("Evaluating")
-precision, recall, F1 = evaluate_model(model, data)
-logger.info(f"Precision: {precision:.4f} --  Recall: {recall:.4f} -- F1: {F1:.4f}")
+for question in questions:
+    labeler=(lambda z: 1 if is_answer(question, get_uri(z)))
+    y = get_y
+    x = x + embeddings(question)
 
-## TRAIN GNN
-logger.info("Training GNN")
+    data = Data(
+        x=x,
+        edge_index=edge_index,
+        y=y,
+        train_mask=train_mask,
+        val_mask=val_mask,
+        test_mask=test_mask,
+    )
 
-model = GCN(
-    num_node_features=data.num_node_features, num_hidden_layers=16, num_classes=2
-)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
-model.train()
-for epoch in range(NUM_EPOCHS):
-    optimizer.zero_grad()
-    out = model(data)
-    loss = F.nll_loss(out[data.train_mask], data.y[data.train_mask])
-    loss.backward()
-    optimizer.step()
-    logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")
+    for epoch in range(NUM_EPOCHS):
+        optimizer.zero_grad()
+        out = model(data)
+        loss = F.nll_loss(out[data.train_mask], data.y[data.train_mask])
+        loss.backward()
+        optimizer.step()
+        logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")
 
 ## EVALUATE
 logger.info("Evaluating")
