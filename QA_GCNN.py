@@ -26,7 +26,7 @@ qa_data_builder = QADataBuilder(
     entities_labels_path=ENTITIES_LABELS_PATH,
     properties_labels_path=PROPERTIES_LABELS_PATH,
     embeddings_path=GRAPH_EMBEDDINGS_PATH,
-    questions_answers=QUESTIONS_ANSWERS_PATH,
+    questions_answers_path=QUESTIONS_ANSWERS_PATH,
     questions_embeddings_path=QUESTIONS_EMBEDDINGS_PATH,
 )
 
@@ -46,10 +46,11 @@ train_mask, test_mask, val_mask = qa_data_builder.get_questions_masks()
 for question, embedding in qa_data_builder.questions_embeddings_masked(
     train_mask
 ):  # call the questions_iterator from the instance
-    x = torch.cat(x, torch.from_numpy(embedding), dim=0)
+    x = torch.cat((x, torch.from_numpy(embedding.reshape(1,-1).repeat(x.shape[0],axis=0))), dim=1) # broadcast the question emb to match the x dim
     y = qa_data_builder.get_y(question=question)
     data = Data(x=x, edge_index=edge_index, y=y)
-
+    print('QA data object built and validated for the question',data.validate())
+    
     for epoch in range(NUM_EPOCHS):
         optimizer.zero_grad()
         out = model(data)
@@ -57,8 +58,10 @@ for question, embedding in qa_data_builder.questions_embeddings_masked(
         loss.backward()
         optimizer.step()
         logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")
+        break;
+    break;
 
 ## EVALUATE
-logger.info("Evaluating")
-precision, recall, F1 = evaluate_model(model, data)
-logger.info(f"Precision: {precision:.4f} --  Recall: {recall:.4f} -- F1: {F1:.4f}")
+#logger.info("Evaluating")
+#precision, recall, F1 = evaluate_model(model, data)
+#logger.info(f"Precision: {precision:.4f} --  Recall: {recall:.4f} -- F1: {F1:.4f}")

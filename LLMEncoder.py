@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from loguru import logger
+from constants import QUESTIONS_ANSWERS_PATH, GRAPH_EMBEDDINGS_PATH
 
 
 class LLMEncoder:
@@ -60,6 +61,14 @@ class LLMEncoder:
         properties_data = pd.read_csv(properties_labels_path)
         encodings = self.generate_encodings_dict(properties_data["label"].to_list())
         self.save_encodings(encodings, os.path.join(base_path, "properties"))
+    
+    def generate_encodings_for_questions(
+            self, question_answers_path, base_path
+    ):
+        logger.info("Generating encodings for Questions.")
+        question_answer_data = pd.read_csv(question_answers_path)
+        encodings = self.generate_encodings_dict(question_answer_data["question"].to_list())
+        self.save_encodings(encodings, os.path.join(base_path, "questions"))
 
 
 if __name__ == "__main__":
@@ -68,10 +77,11 @@ if __name__ == "__main__":
     tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
     model = RobertaModel.from_pretrained("roberta-base")
     llm_encoder = LLMEncoder(tokenizer, model)
-    llm_encoder.generate_encodings_for_entities_labels(
-        entities_labels_path="data/VAD_entities_labels.csv", base_path="data/embeddings"
-    )
-    llm_encoder.generate_encodings_for_properties_labels(
-        properties_labels_path="data/VAD_properties_labels.csv",
-        base_path="data/embeddings",
-    )
+    #llm_encoder.generate_encodings_for_entities_labels(
+    #    entities_labels_path="data/VAD_entities_labels.csv", base_path="data/embeddings"
+    #)
+    #llm_encoder.generate_encodings_for_properties_labels(
+    #    properties_labels_path="data/VAD_properties_labels.csv",
+    #    base_path="data/embeddings",
+    #)
+    llm_encoder.generate_encodings_for_questions(question_answers_path=QUESTIONS_ANSWERS_PATH,base_path=GRAPH_EMBEDDINGS_PATH)

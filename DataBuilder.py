@@ -121,7 +121,7 @@ class QADataBuilder(DataBuilder):
         properties_labels_path,
         embeddings_path,
         questions_answers_path,
-        questions_path,
+        questions_embeddings_path,
         labeler=None,
     ):
         super().__init__(
@@ -138,7 +138,7 @@ class QADataBuilder(DataBuilder):
         )
         self.questions_to_embeddings = {}
         loaded_data = np.load(
-            os.path.join(questions_path, "questions.npz"), allow_pickle=True
+            os.path.join(questions_embeddings_path, "questions.npz"), allow_pickle=True
         )
         for key in loaded_data.keys():
             self.questions_to_embeddings[key] = loaded_data[key]
