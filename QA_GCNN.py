@@ -1,6 +1,6 @@
 from torch_geometric.data import Data
 from DataBuilder import QADataBuilder
-from constants import (
+from config import (
     TRIPLES_PATH,
     ENTITIES_LABELS_PATH,
     PROPERTIES_LABELS_PATH,
@@ -11,7 +11,7 @@ from constants import (
 )
 import torch
 import torch.nn.functional as F
-from GNN import GCN, MLP, evaluate_model
+from NeuralNet.GNN import GCN, MLP, evaluate_model
 from loguru import logger
 import sys
 

@@ -4,3 +4,5 @@
     - [ ] ... 
     - [ ] "perfect"  hop 2 subgraph
 - [ ] Change the Goldstandard to include non "Type" questions
+- [ ] Document hyperparameter usage
+- [ ] One file for GNN and one for MLP

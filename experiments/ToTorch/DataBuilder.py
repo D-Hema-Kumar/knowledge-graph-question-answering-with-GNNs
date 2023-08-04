@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from loguru import logger
+import random
 
 
 class DataBuilder:
@@ -167,6 +168,9 @@ class QADataBuilder(DataBuilder):
         self.labeler = labeler
 
     def get_node_index_for_question_answer(self, question):
+        """
+        Get the node index of the answer to the given question.
+        """
         answer = self.question_to_answers[question]
         return self.entity_to_index[answer]
 
@@ -204,3 +208,21 @@ class QADataBuilder(DataBuilder):
             percentage_val=percentage_val,
             percentage_test=percentage_test,
         )
+
+    def get_mask_for_nodes_for_question(self, question, size):
+        """
+        Return mask for nodes of dimension size.
+        1 True item in the maks corresponds to answer to the given question
+        Remaining (size-1) True items correspond to randomly selected nodes
+        Everything else is False.
+        """
+        answer_node_index = self.get_node_index_for_question_answer(question)
+        available_indices = set(range(len(self.entities_data)))
+        available_indices.remove(answer_node_index)
+        random_nodes = np.random.choice(
+            list(available_indices), size - 1, replace=False
+        )
+        mask = np.zeros(len(self.entities_data), dtype=bool)
+        mask[answer_node_index] = True
+        mask[random_nodes] = True
+        return mask

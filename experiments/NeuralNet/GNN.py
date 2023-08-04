@@ -64,11 +64,11 @@ def evaluate_qa_model(model, qa_data_builder, mask):
         qa_data_builder.questions_embeddings_masked(mask)
     ):
         question, q_embedding = question_embedding
-        x_q = qa_data_builder.get_x(
+        q_x = qa_data_builder.get_x(
             to_concat=q_embedding
         )  # adding the question embedding to the node embeddings
-        y_q = qa_data_builder.get_y(question=question)
-        data = Data(x=x_q, edge_index=qa_data_builder.get_edge_index(), y=y_q)
+        q_y = qa_data_builder.get_y(question=question)
+        data = Data(x=q_x, edge_index=qa_data_builder.get_edge_index(), y=q_y)
         pred_node_idx = _predict_answer(model, data)
         actual_node_idx = qa_data_builder.get_node_index_for_question_answer(question)
         if pred_node_idx == actual_node_idx:
