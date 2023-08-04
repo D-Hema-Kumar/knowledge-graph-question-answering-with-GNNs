@@ -37,14 +37,23 @@ class DataBuilder:
             self.properties_label_to_embeddings[key] = loaded_data[key]
         self.labeler = labeler
 
-    def get_x(self):
+    def get_x(self, to_concat=None):
         """
-        Return node feature vectors.
+        Return node feature vectors, optionally with additional features passed via to_concat.
         """
         embeddings = np.array(
             self.entities_data["label"].map(self.entities_label_to_embeddings).to_list()
         )
-        return torch.tensor(embeddings)
+        x = torch.tensor(embeddings)
+        if to_concat is None:
+            return x
+        return torch.cat(
+            (
+                x,
+                torch.from_numpy(to_concat.reshape(1, -1).repeat(x.shape[0], axis=0)),
+            ),
+            dim=1,
+        )  # broadcast the question emb to match the x dim
 
     def get_y(self, **kwargs):
         """
