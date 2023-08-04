@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from loguru import logger
-from config import QUESTIONS_ANSWERS_PATH, GRAPH_EMBEDDINGS_PATH
+from config.config import QUESTIONS_ANSWERS_PATH, GRAPH_EMBEDDINGS_PATH
 
 
 class LLMEncoder:

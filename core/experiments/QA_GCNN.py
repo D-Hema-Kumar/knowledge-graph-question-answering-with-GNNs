@@ -1,6 +1,6 @@
 from torch_geometric.data import Data
 from DataBuilder import QADataBuilder
-from config import (
+from config.config import (
     TRIPLES_PATH,
     ENTITIES_LABELS_PATH,
     PROPERTIES_LABELS_PATH,

@@ -4,6 +4,3 @@ PROPERTIES_LABELS_PATH = "./data/source_data/VAD_properties_labels.csv"
 QUESTIONS_ANSWERS_PATH = "./data/source_data/VAD_questions_answers.csv"
 GRAPH_EMBEDDINGS_PATH = "./data/graph_embeddings"
 QUESTIONS_EMBEDDINGS_PATH = "./data/question_embeddings"
-
-NUM_EPOCHS = 10000
-NODES_MASK_SIZE = 10

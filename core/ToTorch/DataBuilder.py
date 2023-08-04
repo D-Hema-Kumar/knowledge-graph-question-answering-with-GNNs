@@ -64,15 +64,11 @@ class DataBuilder:
             dim=1,
         )  # broadcast the question emb to match the x dim
 
-    def get_y(self, **kwargs):
+    def get_y(self):
         """
         Return ground truth labels vector.
         """
-        if self.labeler:
-            return torch.tensor(
-                list(map(self.labeler(**kwargs), self.entities_data["uri"]))
-            )
-        raise Exception("No labeler defined.")
+        return torch.tensor(list(map(self.labeler, self.entities_data["uri"])))
 
     def get_edge_type(self):
         """
