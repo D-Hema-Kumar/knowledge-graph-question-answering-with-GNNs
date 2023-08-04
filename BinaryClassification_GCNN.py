@@ -44,7 +44,7 @@ data = Data(
 ## TRAIN MLP
 logger.info("Training MLP")
 model = MLP(
-    num_node_features=data.num_node_features, num_hidden_layers=16, num_classes=2
+    num_node_features=data.num_node_features, dim_hidden_layer=16, num_classes=2
 )
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 model.train()
@@ -66,7 +66,7 @@ logger.info(f"Precision: {precision:.4f} --  Recall: {recall:.4f} -- F1: {F1:.4f
 logger.info("Training GNN")
 
 model = GCN(
-    num_node_features=data.num_node_features, num_hidden_layers=16, num_classes=2
+    num_node_features=data.num_node_features, dim_hidden_layer=16, num_classes=2
 )
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 model.train()

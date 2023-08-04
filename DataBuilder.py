@@ -36,6 +36,14 @@ class DataBuilder:
         for key in loaded_data.keys():
             self.properties_label_to_embeddings[key] = loaded_data[key]
         self.labeler = labeler
+        self.entity_to_index = {
+            entity: index
+            for index, entity in enumerate(self.entities_data.iloc[:, 0].to_list())
+        }
+        self.index_to_entity = {
+            index: entity
+            for index, entity in enumerate(self.entities_data.iloc[:, 0].to_list())
+        }
 
     def get_x(self, to_concat=None):
         """
@@ -80,12 +88,8 @@ class DataBuilder:
         """
         Return edge index list and edge type list.
         """
-        entity_to_id = {
-            string: index
-            for index, string in enumerate(self.entities_data.iloc[:, 0].to_list())
-        }
-        subjects = self.triples_data.iloc[:, 0].map(entity_to_id)
-        objects = self.triples_data.iloc[:, 2].map(entity_to_id)
+        subjects = self.triples_data.iloc[:, 0].map(self.entity_to_index)
+        objects = self.triples_data.iloc[:, 2].map(self.entity_to_index)
         return torch.stack(
             (
                 torch.tensor(subjects, dtype=torch.long),
@@ -161,6 +165,10 @@ class QADataBuilder(DataBuilder):
             return lambda x: 1 if self.question_to_answers[question] == x else 0
 
         self.labeler = labeler
+
+    def get_node_index_for_question_answer(self, question):
+        answer = self.question_to_answers[question]
+        return self.entity_to_index[answer]
 
     def questions_embeddings_masked(self, mask):
         class DictIterator:

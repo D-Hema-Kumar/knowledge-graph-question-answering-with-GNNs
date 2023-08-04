@@ -5,4 +5,4 @@ GRAPH_EMBEDDINGS_PATH = "./data/graph_embeddings"
 QUESTIONS_ANSWERS_PATH = "./data/source_data/VAD_questions_answers.csv"
 QUESTIONS_EMBEDDINGS_PATH = "./data/graph_embeddings"
 
-NUM_EPOCHS = 1000
+NUM_EPOCHS = 25000
