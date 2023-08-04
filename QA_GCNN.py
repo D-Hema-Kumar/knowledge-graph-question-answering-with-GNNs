@@ -16,7 +16,7 @@ from loguru import logger
 import sys
 
 logger.remove()
-logger.add(sys.stderr, level="INFO")
+logger.add(sys.stderr, level="DEBUG")
 
 ## CREATE DATA
 logger.info("Creating Data object")
@@ -32,6 +32,8 @@ qa_data_builder = QADataBuilder(
 
 x = qa_data_builder.get_x()
 edge_index = qa_data_builder.get_edge_index()
+train_mask, test_mask, val_mask = qa_data_builder.get_questions_masks()
+NUM_EPOCHS_PER_QUESTION = int(NUM_EPOCHS / sum(train_mask))
 
 ## TRAIN MLP
 logger.info("Training MLP")
@@ -41,27 +43,29 @@ model = MLP(
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 model.train()
 
-train_mask, test_mask, val_mask = qa_data_builder.get_questions_masks()
-
-for question, embedding in qa_data_builder.questions_embeddings_masked(
-    train_mask
+for q_index, question_embedding in enumerate(
+    qa_data_builder.questions_embeddings_masked(train_mask)
 ):  # call the questions_iterator from the instance
-    x = torch.cat((x, torch.from_numpy(embedding.reshape(1,-1).repeat(x.shape[0],axis=0))), dim=1) # broadcast the question emb to match the x dim
-    y = qa_data_builder.get_y(question=question)
-    data = Data(x=x, edge_index=edge_index, y=y)
-    print('QA data object built and validated for the question',data.validate())
-    
-    for epoch in range(NUM_EPOCHS):
+    question, q_embedding = question_embedding
+    q_x = qa_data_builder.get_x(
+        to_concat=q_embedding
+    )  # add question embedding to node features embedding
+    q_y = qa_data_builder.get_y(question=question)
+    data = Data(x=q_x, edge_index=edge_index, y=q_y)
+    if not data.validate():
+        logger.error(f"Data object is not valid for question {question}")
+
+    for epoch in range(NUM_EPOCHS_PER_QUESTION):
         optimizer.zero_grad()
         out = model(data)
         loss = F.nll_loss(out, data.y)
         loss.backward()
         optimizer.step()
-        logger.debug(f"Epoch: {epoch:03d}, Loss: {loss:.4f}")
-        break;
-    break;
+    logger.debug(
+        f"Total Question: {(q_index + 1)}, Total Epochs: {NUM_EPOCHS_PER_QUESTION * (q_index + 1):3d}, Loss: {loss:.4f}"
+    )
 
 ## EVALUATE
-#logger.info("Evaluating")
-#precision, recall, F1 = evaluate_model(model, data)
-#logger.info(f"Precision: {precision:.4f} --  Recall: {recall:.4f} -- F1: {F1:.4f}")
+# logger.info("Evaluating")
+# precision, recall, F1 = evaluate_model(model, data)
+# logger.info(f"Precision: {precision:.4f} --  Recall: {recall:.4f} -- F1: {F1:.4f}")
