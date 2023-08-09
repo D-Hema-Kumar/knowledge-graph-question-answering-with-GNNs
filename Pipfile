@@ -15,6 +15,7 @@ pandas = "*"
 transformers = "*"
 loguru = "*"
 tqdm = "*"
+seaborn = "*"
 
 [dev-packages]
 

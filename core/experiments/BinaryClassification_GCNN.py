@@ -1,5 +1,5 @@
 from torch_geometric.data import Data
-from DataBuilder import DataBuilder
+from core.ToTorch.DataBuilder import DataBuilder
 from config.config import (
     TRIPLES_PATH,
     ENTITIES_LABELS_PATH,

@@ -1,30 +1,44 @@
 import torch
-from torch_geometric.nn import GCNConv
+from torch_geometric.nn import GCNConv,MessagePassing
 import torch.nn.functional as F
 from torch_geometric.data import Data
 from loguru import logger
 
-
+from torch_geometric.nn import GCNConv
 class GCN(torch.nn.Module):
-    def __init__(self, num_node_features, dim_hidden_layer, num_classes):
+    def __init__(self, num_node_features, dim_hidden_layer,num_layers, num_classes):
         super().__init__()
-        self.conv1 = GCNConv(num_node_features, dim_hidden_layer)
-        self.conv2 = GCNConv(dim_hidden_layer, num_classes)
+        #self.conv1 = GCNConv(num_node_features, dim_hidden_layer)
+        #self.conv2 = GCNConv(dim_hidden_layer, num_classes)
+        layers = []
+        input_dim, output_dim = num_node_features, dim_hidden_layer
+
+        for _ in range(num_layers-1):
+            layers = layers+[GCNConv(in_channels=input_dim,out_channels=output_dim),torch.nn.ReLU(),torch.nn.Dropout(p=0.2)]
+            
+            input_dim = dim_hidden_layer
+        layers = layers+[GCNConv(in_channels=input_dim,out_channels=num_classes)]
+        self.layers = torch.nn.ModuleList(layers)
 
     def forward(self, data):
         x, edge_index = data.x, data.edge_index
-        x = self.conv1(x, edge_index)
-        x = F.relu(x)
-        x = F.dropout(x, training=self.training)
-        x = self.conv2(x, edge_index)
-        return F.log_softmax(x, dim=1)
+        embeddings = []
+        for layer in self.layers:
+            if isinstance(layer,MessagePassing):
+                x = layer(x,edge_index)
+                embeddings.append(x.clone())
+            else:
+                x= layer(x)
+            
+        return F.log_softmax(x, dim=1), embeddings
 
 
 def _predict_answer(model, data):
     """
     Returns the predicted answer and node index.
     """
-    return model(data).max(dim=1)[0].argmax().item()
+    pred, _ = model(data)
+    return pred.max(dim=1)[0].argmax().item()
 
 
 def evaluate_qa_model(model, qa_data_builder, mask):

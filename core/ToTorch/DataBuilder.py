@@ -222,3 +222,56 @@ class QADataBuilder(DataBuilder):
         mask[answer_node_index] = True
         mask[random_nodes] = True
         return mask
+
+
+class NodeTypeDataBuilder(DataBuilder):
+    '''This class is for building the data object necessary for multiclass node type classification task
+    '''
+    
+    def __init__(
+        self,
+        triples_path,
+        entities_labels_path,
+        properties_labels_path,
+        embeddings_path,
+        labeler=None,
+    ):
+        super().__init__(
+            triples_path,
+            entities_labels_path,
+            properties_labels_path,
+            embeddings_path,
+            labeler,
+        )
+    
+    def get_y(self):
+
+        #1 get node type records from the triple store (s,p,o)
+        triples  = self.triples_data.copy()
+        triples.columns = ['subject','predicate','object']
+        node_type_triples = triples[triples.predicate=='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'].copy()
+
+        #2 drop the duplicates based on the subject
+        node_type_triples.drop_duplicates(subset='subject', keep='first', inplace=True)
+
+        #3 create the object-class ID dictionary and add a column with class ids (object field holds the type information of subject)
+        class_id_to_node_type = node_type_triples["object"].unique().tolist()
+        node_type_to_class_id = {node : class_id for class_id, node in enumerate(class_id_to_node_type) }
+        node_type_triples['class'] = node_type_triples["object"].map(node_type_to_class_id)
+
+        #4 create subject & it's type class id dictionary
+        node_to_its_class_label = dict(zip(node_type_triples['subject'].to_list(), node_type_triples['class'].to_list()))
+
+        #5 map the above node type by applying to entities_labels file.
+            #a. Nodes that are not in step 4 dict, assign some class and hide them from training/testing/validation
+        entities_data = self.entities_data.copy() # copy migh not be needed
+        entities_data['class']= entities_data['uri'].apply( lambda x : node_to_its_class_label[x] if x in node_to_its_class_label else len(node_type_to_class_id))
+        
+        #6 Add the new class to original class-node type list if it is present
+        if len(entities_data[entities_data["class"]==len(node_type_to_class_id)]) > 0:
+            class_id_to_node_type.append("unknown")
+            node_type_to_class_id["unknown"]=len(node_type_to_class_id)
+
+        self.class_id_to_node_type = class_id_to_node_type
+        self.node_type_to_class_id = node_type_to_class_id
+        return torch.tensor(list(entities_data["class"]))

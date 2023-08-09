@@ -21,3 +21,5 @@
 
 ## Others
 - [ ] Change the Goldstandard to include non "Type" questions
+- Add more question
+- Get different raondom samples from 

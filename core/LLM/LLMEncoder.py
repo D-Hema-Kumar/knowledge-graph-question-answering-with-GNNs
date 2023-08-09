@@ -3,8 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from loguru import logger
-from config.config import QUESTIONS_ANSWERS_PATH, GRAPH_EMBEDDINGS_PATH
-
+from config.config import PROPERTIES_LABELS_PATH, QUESTIONS_ANSWERS_PATH, GRAPH_EMBEDDINGS_PATH
 
 class LLMEncoder:
     def __init__(self, tokenizer, model):
@@ -80,10 +79,10 @@ if __name__ == "__main__":
     # llm_encoder.generate_encodings_for_entities_labels(
     #    entities_labels_path="data/VAD_entities_labels.csv", base_path="data/embeddings"
     # )
-    # llm_encoder.generate_encodings_for_properties_labels(
-    #    properties_labels_path="data/VAD_properties_labels.csv",
-    #    base_path="data/embeddings",
-    # )
-    llm_encoder.generate_encodings_for_questions(
-        question_answers_path=QUESTIONS_ANSWERS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
-    )
+    llm_encoder.generate_encodings_for_properties_labels(
+        properties_labels_path=PROPERTIES_LABELS_PATH,
+        base_path=GRAPH_EMBEDDINGS_PATH,
+     )
+    #llm_encoder.generate_encodings_for_questions(
+    #    question_answers_path=QUESTIONS_ANSWERS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
+    #)
