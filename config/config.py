@@ -1,6 +1,6 @@
 TRIPLES_PATH = "./data/source_data/VAD_triples.csv"
-ENTITIES_LABELS_PATH = "./data/source_data/VAD_entities_labels.csv"
-PROPERTIES_LABELS_PATH = "./data/source_data/VAD_properties_labels.csv"
+ENTITIES_LABELS_PATH = "./data/source_data/VAD_entities.csv"
+PROPERTIES_LABELS_PATH = "./data/source_data/VAD_properties.csv"
 QUESTIONS_ANSWERS_PATH = "./data/source_data/VAD_questions_answers.csv"
 GRAPH_EMBEDDINGS_PATH = "./data/graph_embeddings"
 QUESTIONS_EMBEDDINGS_PATH = "./data/question_embeddings"

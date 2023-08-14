@@ -27,7 +27,7 @@ def save_experiment_results_to_file(file_name, experiment_context:str,
                                     ):
 
     # Define the CSV field names for training context and evaluation results
-    fieldnames = ["time_stamp","info","Epochs", "Learning Rate", "hidden_layer_dimension", "Model", 
+    fieldnames = ["time_stamp","info","Epochs", "Learning Rate", "hidden_layer_dimension","num_layers", "Model", 
                   "accuracy", "precision", "recall","F1","model_directory","triples_path","entities_labels_path",
                   "properties_labels_path","graph_embeddings_path"]
     file_path = os.path.join(EXPERIMENT_RESULTS_PATH["eval_results"], file_name)
@@ -46,6 +46,7 @@ def save_experiment_results_to_file(file_name, experiment_context:str,
         "Epochs": training_context.num_epochs,
         "Learning Rate": training_context.learning_rate,
         "hidden_layer_dimension": training_context.dim_hidden_layer,
+        "num_layers":training_context.num_layers,
 
         "Model": experiment.model,
         "model_directory":experiment.experiment_results_folder_path,

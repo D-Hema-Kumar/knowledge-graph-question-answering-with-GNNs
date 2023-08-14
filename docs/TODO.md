@@ -6,9 +6,9 @@
     - [ ] Store results for experiments in disk
 
 ## Experiments to Try out with current Neural Nets
-- [ ] Simple BinaryClassification with MLP
-- [ ] Simple BinaryClassification with GCN
-- [ ] Classify instances and retrieve embedding to give to Jan
+- [ ] Simple BinaryClassification with MLP -- Done
+- [ ] Simple BinaryClassification with GCN -- Done
+- [ ] Classify instances and retrieve embedding to give to Jan -- Done
 - [ ] QA simple BinaryClassification and MLP
 - [ ] QA simple BinaryClassification and MLP with masks
 - [ ] QA simple BinaryClassification and GCN

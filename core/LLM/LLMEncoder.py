@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from loguru import logger
-from config.config import PROPERTIES_LABELS_PATH, QUESTIONS_ANSWERS_PATH, GRAPH_EMBEDDINGS_PATH
+from config.config import PROPERTIES_LABELS_PATH, QUESTIONS_ANSWERS_PATH, GRAPH_EMBEDDINGS_PATH, ENTITIES_LABELS_PATH
 
 class LLMEncoder:
     def __init__(self, tokenizer, model):
@@ -59,7 +59,9 @@ class LLMEncoder:
         logger.info("Generating encodings for Properties.")
         properties_data = pd.read_csv(properties_labels_path)
         encodings = self.generate_encodings_dict(properties_data["label"].to_list())
-        self.save_encodings(encodings, os.path.join(base_path, "properties"))
+        encodings_path = os.path.join(base_path, "properties")
+        print('encoding path:',encodings_path)
+        self.save_encodings(encodings, encodings_path)
 
     def generate_encodings_for_questions(self, question_answers_path, base_path):
         logger.info("Generating encodings for Questions.")
@@ -69,6 +71,33 @@ class LLMEncoder:
         )
         self.save_encodings(encodings, os.path.join(base_path, "questions"))
 
+    def generate_encodings_from_context_dict(self, dict_input_sentences):
+        """
+        Generate encodings dict for a dictionary of input sentences.
+        """
+        logger.info("Generating encodings.")
+        res = {}
+        for key in dict_input_sentences:
+            res[key] = self.encode_sentence(dict_input_sentences[key])
+        return res
+    def generate_encodings_for_entities_context(self, entities_labels_path, base_path):
+        logger.info("Generating encodings for Entities from context field.")
+        entities_data = pd.read_csv(entities_labels_path)
+        mask = entities_data.iloc[:, 1].isna()
+        entities_data.loc[mask, "label"] = (
+            entities_data[entities_data.iloc[:, 1].isna()]
+            .iloc[:, 0]
+            .apply(lambda x: x.split("/")[-1])
+        )  # deal with missing labels
+
+        context_na_mask = entities_data.iloc[:,2].isna()
+        entities_data.loc[context_na_mask,'context']= ( 
+            entities_data[context_na_mask]
+            .iloc[:,0].apply(lambda x:x.split("/")[-1])
+        ) # deal with missing context
+        label_context_dict = {label : context for label, context in zip(entities_data["label"],entities_data["context"])}
+        encodings = self.generate_encodings_dict(label_context_dict)
+        self.save_encodings(encodings, os.path.join(base_path, "entities"))
 
 if __name__ == "__main__":
     from transformers import RobertaTokenizer, RobertaModel
@@ -76,13 +105,16 @@ if __name__ == "__main__":
     tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
     model = RobertaModel.from_pretrained("roberta-base")
     llm_encoder = LLMEncoder(tokenizer, model)
-    # llm_encoder.generate_encodings_for_entities_labels(
-    #    entities_labels_path="data/VAD_entities_labels.csv", base_path="data/embeddings"
-    # )
-    llm_encoder.generate_encodings_for_properties_labels(
-        properties_labels_path=PROPERTIES_LABELS_PATH,
-        base_path=GRAPH_EMBEDDINGS_PATH,
+    llm_encoder.generate_encodings_for_entities_labels(
+        entities_labels_path=ENTITIES_LABELS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
      )
+    #llm_encoder.generate_encodings_for_entities_context(
+    #    entities_labels_path=ENTITIES_LABELS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
+    # )
+    #llm_encoder.generate_encodings_for_properties_labels(
+    #    properties_labels_path=PROPERTIES_LABELS_PATH,
+    #    base_path=GRAPH_EMBEDDINGS_PATH,
+    # )
     #llm_encoder.generate_encodings_for_questions(
     #    question_answers_path=QUESTIONS_ANSWERS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
     #)
