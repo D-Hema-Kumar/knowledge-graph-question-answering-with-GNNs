@@ -3,7 +3,9 @@ import pandas as pd
 import numpy as np
 import os
 from loguru import logger
+from torch_geometric.data import Data
 import random
+import ast
 
 
 class DataBuilder:
@@ -222,6 +224,8 @@ class QADataBuilder(DataBuilder):
         mask[answer_node_index] = True
         mask[random_nodes] = True
         return mask
+    
+    
 
 
 class NodeTypeDataBuilder(DataBuilder):
@@ -275,3 +279,104 @@ class NodeTypeDataBuilder(DataBuilder):
         self.class_id_to_node_type = class_id_to_node_type
         self.node_type_to_class_id = node_type_to_class_id
         return torch.tensor(list(entities_data["class"]))
+    
+class QAMaskBuilder(DataBuilder):
+    '''The class to build the relevant masks given a data objet and questions '''
+
+    def __init__(
+    self,
+    triples_path,
+    entities_labels_path,
+    properties_labels_path,
+    embeddings_path,
+    questions_concepts_answers_path,
+    labeler=None,
+    ):
+        super().__init__(
+            triples_path,
+            entities_labels_path,
+            properties_labels_path,
+            embeddings_path,
+            labeler,
+        )
+        self.question_concepts_answers = (
+            pd.read_csv(questions_concepts_answers_path)
+    
+        )
+        # reads columns as lists instead of strings
+        list_columns = ['concepts', 'answers']
+        for col in list_columns:
+            self.question_concepts_answers[col] = self.question_concepts_answers[col].apply(ast.literal_eval)
+
+        self.x = self.get_x()
+        self.edge_index = self.get_edge_index()
+        self.edge_type = self.get_edge_type()
+
+
+    def build_data(self):
+        self.data = Data(x=self.x,edge_index=self.edge_index, edge_type=self.edge_type)
+        return self.data
+
+
+    def get_concepts_and_masks_for_question(self, question:str, concept_uri:list, answer_uri:list):
+        '''
+        given a question, q_node, a_node : builds a list of subgraph concepts and its related masks:
+        e.g. 
+        question_subgraph_concepts:  tensor([0, 1, 2, 3, 4])
+        question_node_mask:  tensor([ True, False, False, False, False])
+        answer_node_mask:  tensor([False, False, False, False,  True])
+        question_training_nodes_mask:  tensor([False,  True,  True,  True,  True]) '''
+
+        # concept and answer nodes
+        question_specific_concept_nodes =  torch.tensor([self.entity_to_index[uri] for uri in concept_uri])
+        question_specific_answer_nodes = torch.tensor([self.entity_to_index[uri] for uri in answer_uri])
+
+        # 2 hop neighbors from concept nodes
+        mask = torch.isin(self.data.edge_index[0], question_specific_concept_nodes)
+        one_hop_neighbors = torch.unique(self.data.edge_index[1, mask])
+        one_hop_neighbors_with_q_node = torch.unique(torch.cat((one_hop_neighbors,question_specific_concept_nodes)))
+
+        subgraph_mask = torch.zeros_like(self.data.edge_index[0], dtype=torch.bool)
+        for node in one_hop_neighbors_with_q_node:
+            subgraph_mask = subgraph_mask | (self.data.edge_index[0]==node)
+        
+        # all concepts in the subgraph
+        question_subgraph_all_nodes = torch.unique(self.data.edge_index[:,subgraph_mask])
+
+        # initialize masks: 
+        question_subgraph_concept_mask = torch.zeros_like(question_subgraph_all_nodes, dtype=torch.bool)
+        question_subgraph_answer_and_random_nodes_mask = torch.zeros_like(question_subgraph_all_nodes, dtype=torch.bool)
+        question_subgraph_answer_mask = torch.zeros_like(question_subgraph_all_nodes, dtype=torch.bool)
+
+        question_subgraph_concept_mask = question_subgraph_concept_mask | torch.isin(question_subgraph_all_nodes , question_specific_concept_nodes)
+        question_subgraph_answer_mask  =  question_subgraph_answer_mask | torch.isin(question_subgraph_all_nodes , question_specific_answer_nodes)
+
+        # Exclude question_mask and answer_mask items
+        valid_indices = torch.where(~question_subgraph_concept_mask & ~question_subgraph_answer_mask)[0]
+        n=18 # randomly sample 18 nodes for training
+        if n < len(valid_indices):
+            random_indices  = random.sample(valid_indices.tolist(), n)
+            question_subgraph_answer_and_random_nodes_mask[random_indices] = True
+            question_subgraph_answer_and_random_nodes_mask = question_subgraph_answer_and_random_nodes_mask | question_subgraph_answer_mask
+        else:
+            question_subgraph_answer_and_random_nodes_mask[~question_subgraph_concept_mask] = True
+    
+        self.subgraph_mask = subgraph_mask
+        self.question_subgraph_all_nodes = question_subgraph_all_nodes
+        self.question_subgraph_concept_mask = question_subgraph_concept_mask
+        self.question_subgraph_answer_mask = question_subgraph_answer_mask
+        self.question_subgraph_answer_and_random_nodes_mask = question_subgraph_answer_and_random_nodes_mask
+
+        return subgraph_mask, question_subgraph_all_nodes, question_subgraph_concept_mask, question_subgraph_answer_mask, question_subgraph_answer_and_random_nodes_mask
+    
+    def get_question_training_mask_for_x(self):
+        self.q_training_x_mask = torch.full((self.data.x.size()[0],),False, dtype=torch.bool)
+        self.q_training_x_mask[self.question_subgraph_all_nodes[self.question_subgraph_answer_and_random_nodes_mask]] = True
+        return self.q_training_x_mask
+    
+    def get_question_y_labels(self):
+        self.q_y_label = torch.zeros((self.data.x.size()[0],), dtype=torch.long)
+        self.q_y_label[self.question_subgraph_all_nodes[self.question_subgraph_answer_mask]] = 1
+        return self.q_y_label
+
+
