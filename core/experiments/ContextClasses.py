@@ -3,7 +3,10 @@ class DataContext(object):
     '''The data context class creates a data object that contains all the attributes that represent
     training data'''
 
-    def __init__(self, triples_path:str,entities_labels_path:str,properties_labels_path:str,graph_embeddings_path:str):
+    def __init__(self, triples_path:str,
+                 entities_labels_path:str,
+                 properties_labels_path:str,
+                 graph_embeddings_path:str):
         
         self.triples_path = triples_path
         self.entities_labels_path = entities_labels_path
@@ -21,5 +24,26 @@ class TrainingContext(object):
         self.learning_rate = learning_rate
         self.dim_hidden_layer = dim_hidden_layer
         self.num_layers=num_layers
+
+class QADataContext(DataContext):
+    def __init__(
+        self,
+        triples_path,
+        entities_labels_path,
+        properties_labels_path,
+        graph_embeddings_path,
+        questions_concepts_answers_path,
+        questions_embeddings_path
+    ):
+        
+        super().__init__( 
+                         triples_path,
+                         entities_labels_path,
+                         properties_labels_path,
+                         graph_embeddings_path
+                )
+        self.questions_concepts_answers_path = questions_concepts_answers_path
+        self.questions_embeddings_path = questions_embeddings_path
+
 
 

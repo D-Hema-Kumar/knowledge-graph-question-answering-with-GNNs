@@ -1,1 +1,0 @@
-from config.config import PROPERTIES_LABELS_PATH

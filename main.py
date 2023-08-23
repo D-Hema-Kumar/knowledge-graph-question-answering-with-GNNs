@@ -1,25 +1,38 @@
 from core.NeuralNet.MLP import MLP
 from core.experiments.utils import (save_experiment_results_to_file,evaluate_model)
-from core.experiments.ContextClasses import (DataContext, TrainingContext)
+from core.experiments.ContextClasses import (DataContext, TrainingContext, QADataContext)
 from core.experiments.binary_classification.binary_classification_experiment import (
     BinaryClassificationExperiment,
 )
 from core.experiments.multi_class_classification.multi_class_classification_experiment import (
     MultiClassificationExperiment,
 )
+
+from core.experiments.qa.qa_experiment import (QAExperiment,)
 from config.config import (
     TRIPLES_PATH,
     ENTITIES_LABELS_PATH,
     PROPERTIES_LABELS_PATH,
     GRAPH_EMBEDDINGS_PATH,
 )
+
+from config.config import (
+    
+    TRIPLES_PATH_OLD,
+    ENTITIES_LABELS_PATH_OLD,
+    PROPERTIES_LABELS_PATH_OLD,
+    GRAPH_EMBEDDINGS_PATH_OLD,
+    QUESTIONS_CONCEPTS_ANSWERS_PATH,
+    GRAPH_EMBEDDINGS_PATH_OLD,
+    QUESTIONS_EMBEDDINGS_PATH,
+)
 from core.NeuralNet.MLP import MLP
-from core.NeuralNet.GNN import GCN
+from core.NeuralNet.GNN import GCN, RGCN
 from loguru import logger
 import sys
 
 logger.remove()
-logger.add(sys.stderr, level="INFO")
+logger.add(sys.stderr, level="DEBUG")
 
 # EXPERIMENT 1
 '''
@@ -106,7 +119,7 @@ save_experiment_results_to_file(file_name = "experiments.csv",
                                 )
 '''
 # Multi class classification Experiment
-
+'''
 training_context = TrainingContext(num_epochs = 1000,
                                    learning_rate = 0.01,
                                    num_layers=3,
@@ -143,3 +156,34 @@ save_experiment_results_to_file(file_name = "experiments.csv",
                                 experiment=multiCls_experiment,
                                 evaluation_results=evaluation_results
                                 )
+'''
+
+# QA experiment
+
+training_context = TrainingContext(num_epochs = 20,
+                                   learning_rate = 0.01,
+                                   num_layers=2,
+                                   dim_hidden_layer = 16
+                                    )
+
+data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
+                           entities_labels_path = ENTITIES_LABELS_PATH_OLD,
+                           properties_labels_path = PROPERTIES_LABELS_PATH_OLD,
+                           graph_embeddings_path = GRAPH_EMBEDDINGS_PATH_OLD,
+                           questions_concepts_answers_path=QUESTIONS_CONCEPTS_ANSWERS_PATH,
+                           questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH)
+
+qa_experiment = QAExperiment(
+    training_context=training_context,
+    data_context=data_context,
+    model_type=RGCN,
+)
+# TRAIN
+qa_experiment.train()
+
+
+# EVALUATE & SAVE
+
+qa_experiment.save_model()
+qa_experiment.eval()
+

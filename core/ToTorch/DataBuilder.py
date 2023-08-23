@@ -290,6 +290,7 @@ class QAMaskBuilder(DataBuilder):
     properties_labels_path,
     embeddings_path,
     questions_concepts_answers_path,
+    questions_embeddings_path,
     labeler=None,
     ):
         super().__init__(
@@ -307,6 +308,14 @@ class QAMaskBuilder(DataBuilder):
         list_columns = ['concepts', 'answers']
         for col in list_columns:
             self.question_concepts_answers[col] = self.question_concepts_answers[col].apply(ast.literal_eval)
+        
+        #load question embeddings
+        self.questions_to_embeddings = {}
+        loaded_data = np.load(
+        os.path.join(questions_embeddings_path, "questions.npz"), allow_pickle=True
+        )
+        for key in loaded_data.keys():
+            self.questions_to_embeddings[key] = loaded_data[key]
 
         self.x = self.get_x()
         self.edge_index = self.get_edge_index()
@@ -328,8 +337,8 @@ class QAMaskBuilder(DataBuilder):
         question_training_nodes_mask:  tensor([False,  True,  True,  True,  True]) '''
 
         # concept and answer nodes
-        question_specific_concept_nodes =  torch.tensor([self.entity_to_index[uri] for uri in concept_uri])
-        question_specific_answer_nodes = torch.tensor([self.entity_to_index[uri] for uri in answer_uri])
+        question_specific_concept_nodes =  torch.tensor(self.get_concepts(concept_uri))
+        question_specific_answer_nodes = torch.tensor(self.get_concepts(answer_uri))
 
         # 2 hop neighbors from concept nodes
         mask = torch.isin(self.data.edge_index[0], question_specific_concept_nodes)
@@ -378,5 +387,12 @@ class QAMaskBuilder(DataBuilder):
         self.q_y_label = torch.zeros((self.data.x.size()[0],), dtype=torch.long)
         self.q_y_label[self.question_subgraph_all_nodes[self.question_subgraph_answer_mask]] = 1
         return self.q_y_label
+    
+    def get_concepts(self,concepts:list):
+        conceptIds = []
+        for concept in concepts:
+            if concept in self.entity_to_index.keys():
+                conceptIds.append(self.entity_to_index[concept])
+        return conceptIds
 
 

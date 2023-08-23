@@ -3,7 +3,13 @@ import pandas as pd
 import numpy as np
 import os
 from loguru import logger
-from config.config import PROPERTIES_LABELS_PATH, QUESTIONS_ANSWERS_PATH, GRAPH_EMBEDDINGS_PATH, ENTITIES_LABELS_PATH
+from config.config import ( 
+    PROPERTIES_LABELS_PATH, 
+    QUESTIONS_ANSWERS_PATH, 
+    GRAPH_EMBEDDINGS_PATH, 
+    ENTITIES_LABELS_PATH,
+    QUESTIONS_CONCEPTS_ANSWERS_PATH
+)
 
 class LLMEncoder:
     def __init__(self, tokenizer, model):
@@ -105,9 +111,9 @@ if __name__ == "__main__":
     tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
     model = RobertaModel.from_pretrained("roberta-base")
     llm_encoder = LLMEncoder(tokenizer, model)
-    llm_encoder.generate_encodings_for_entities_labels(
-        entities_labels_path=ENTITIES_LABELS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
-     )
+    #llm_encoder.generate_encodings_for_entities_labels(
+    #    entities_labels_path=ENTITIES_LABELS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
+    # )
     #llm_encoder.generate_encodings_for_entities_context(
     #    entities_labels_path=ENTITIES_LABELS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
     # )
@@ -116,5 +122,5 @@ if __name__ == "__main__":
     #    base_path=GRAPH_EMBEDDINGS_PATH,
     # )
     #llm_encoder.generate_encodings_for_questions(
-    #    question_answers_path=QUESTIONS_ANSWERS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
+    #    question_answers_path=QUESTIONS_CONCEPTS_ANSWERS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
     #)

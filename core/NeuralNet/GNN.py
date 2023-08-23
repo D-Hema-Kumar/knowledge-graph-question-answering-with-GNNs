@@ -3,8 +3,8 @@ from torch_geometric.nn import GCNConv,MessagePassing
 import torch.nn.functional as F
 from torch_geometric.data import Data
 from loguru import logger
+from torch_geometric.nn import GCNConv, RGCNConv
 
-from torch_geometric.nn import GCNConv
 class GCN(torch.nn.Module):
     def __init__(self, num_node_features, dim_hidden_layer,num_layers, num_classes):
         super().__init__()
@@ -31,6 +31,34 @@ class GCN(torch.nn.Module):
                 x= layer(x)
             
         return F.log_softmax(x, dim=1), embeddings
+    
+class RGCN(torch.nn.Module):
+
+    def __init__(self, num_node_features, dim_hidden_layer, num_relations, num_layers, num_classes):
+        super().__init__()
+        
+        layers = []
+        input_dim, output_dim = num_node_features, dim_hidden_layer
+
+        for _ in range(num_layers-1):
+            layers = layers+[RGCNConv(in_channels=input_dim,out_channels=output_dim, num_relations=num_relations),torch.nn.ReLU(),torch.nn.Dropout(p=0.2)]
+            
+            input_dim = dim_hidden_layer
+        layers = layers+[RGCNConv(in_channels=input_dim,out_channels=num_classes, num_relations=num_relations)]
+        self.layers = torch.nn.ModuleList(layers)
+
+    def forward(self, data):
+        x, edge_index, edge_type = data.x, data.edge_index, data.edge_type
+        embeddings = []
+        for layer in self.layers:
+            if isinstance(layer,MessagePassing):
+                x = layer(x,edge_index,edge_type)
+                embeddings.append(x.clone())
+            else:
+                x= layer(x)
+            
+        return F.log_softmax(x, dim=1), embeddings
+
 
 
 def _predict_answer(model, data):
