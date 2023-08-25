@@ -19,11 +19,12 @@ class TrainingContext(object):
     '''The training context class creates an object that contains all the attributes that represent
     training_context of the experiment'''
 
-    def __init__(self, num_epochs:int,learning_rate:float,dim_hidden_layer:int,num_layers=3):
+    def __init__(self, num_epochs:int,learning_rate:float,dim_hidden_layer:int,num_layers=3,num_bases=None):
         self.num_epochs = num_epochs
         self.learning_rate = learning_rate
         self.dim_hidden_layer = dim_hidden_layer
         self.num_layers=num_layers
+        self.num_bases = num_bases
 
 class QADataContext(DataContext):
     def __init__(

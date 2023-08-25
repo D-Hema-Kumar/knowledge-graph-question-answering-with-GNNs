@@ -1,9 +1,15 @@
 import csv
+import pandas as pd
+import numpy as np
 import os
 from config.config import (
     EXPERIMENT_RESULTS_PATH )
 from core.experiments.ContextClasses import (DataContext, TrainingContext)
+from torch_geometric.data import Data
+from loguru import logger
 import datetime
+import torch
+from tqdm import tqdm
 
 def evaluate_model(model, data):
     #### Function to evaluate a model and return precision, recall and F1
@@ -78,3 +84,61 @@ def save_experiment_results_to_file(file_name, experiment_context:str,
 
         # Write the data to the file
         writer.writerow(data)
+
+def get_device():
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+        device = torch.device('mps')
+    else:
+        device = torch.device('cpu')
+    #print("device type: ", device)
+    return device
+
+def load_model(trained_model_path):
+    return torch.load(trained_model_path, map_location=get_device())
+
+def evaluate_qa_model(trained_model_path, qa_data_builder, model_name):
+    device = get_device()
+    data = qa_data_builder.build_data()
+    logger.info("Loading model.")
+    trained_model = load_model(os.path.join(trained_model_path,model_name))
+    logger.info("Evaluating model.")
+    trained_model.eval()
+    with torch.no_grad():
+        res = []
+        for idx in tqdm(qa_data_builder.question_concepts_answers.index):
+
+            row = qa_data_builder.question_concepts_answers.loc[idx]
+            q_embedding = qa_data_builder.questions_to_embeddings[row["question"]]
+            q_x = qa_data_builder.get_x(to_concat=q_embedding)
+            q_edge_mask, q_nodes, q_concept_mask, q_answer_mask, q_answer_and_random_nodes_mask =qa_data_builder.get_concepts_and_masks_for_question(question =row["question"], concept_uri= row["concepts"], answer_uri= row["answers"])
+            q_edge_index = data.edge_index[:,q_edge_mask]
+            q_edge_type = data.edge_type[q_edge_mask]
+            q_training_x_mask = qa_data_builder.get_question_training_mask_for_x()
+            q_y_labels = qa_data_builder.get_question_y_labels()
+            q_data = Data(x=q_x,edge_index=q_edge_index,edge_type=q_edge_type,train_mask =q_training_x_mask,y=q_y_labels)
+            q_data = q_data.to(device)
+            logger.debug(f'Predicting for Q {idx} : {row["question"]}')
+            out,_ = trained_model(q_data)
+            predicted_answer_nodes = torch.where(out.argmax(dim=1))[0]
+            predicted_answer_node_probabilities = out.max(dim=1)[0][predicted_answer_nodes]
+            sorted_probability_indices = torch.argsort(predicted_answer_node_probabilities, descending= True)
+            count_predicted_nodes =len(predicted_answer_nodes)
+            actual_answer_nodes = q_nodes[q_answer_mask].tolist()
+            if count_predicted_nodes > 0 and count_predicted_nodes < 50 :
+                logger.debug(f"Answers predicted.")
+                is_predicted_in_actual_answers = bool(set(actual_answer_nodes) & set(predicted_answer_nodes[sorted_probability_indices].tolist()))
+                res.append((idx, actual_answer_nodes, predicted_answer_nodes[sorted_probability_indices].tolist(),predicted_answer_node_probabilities[sorted_probability_indices].tolist(),count_predicted_nodes,is_predicted_in_actual_answers))
+            
+            elif count_predicted_nodes >= 50:
+                logger.debug(f"More than 50 answers found.")
+                res.append((idx, actual_answer_nodes, np.nan,np.nan,count_predicted_nodes,False))
+            else:
+                logger.debug(f"NO answers found.")
+                res.append((idx, actual_answer_nodes, np.nan,np.nan,0,False))
+        
+        
+    eval_res = pd.DataFrame.from_records(res,columns=["q_idx","actual_answer_nodes","predicted_answer_nodes","probabilities_of_answer_nodes","count_predicted_nodes","is_predicted_in_actual"])
+    eval_res.to_csv(os.path.join(trained_model_path,"evaluation_results.csv"),index=False)
+    logger.info("Evaluation results saved.")

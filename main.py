@@ -163,7 +163,8 @@ save_experiment_results_to_file(file_name = "experiments.csv",
 training_context = TrainingContext(num_epochs = 20,
                                    learning_rate = 0.01,
                                    num_layers=2,
-                                   dim_hidden_layer = 16
+                                   dim_hidden_layer = 16,
+                                   num_bases= 90
                                     )
 
 data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
@@ -182,8 +183,8 @@ qa_experiment = QAExperiment(
 qa_experiment.train()
 
 
-# EVALUATE & SAVE
+# SAVE
 
 qa_experiment.save_model()
-qa_experiment.eval()
+qa_experiment.eval() # getting memory error when training and evaluation are done at the same time in server
 
