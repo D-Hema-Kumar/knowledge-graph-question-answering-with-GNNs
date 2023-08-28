@@ -10,6 +10,7 @@ from loguru import logger
 import datetime
 import torch
 from tqdm import tqdm
+import ast
 
 def evaluate_model(model, data):
     #### Function to evaluate a model and return precision, recall and F1
@@ -29,16 +30,17 @@ def save_experiment_results_to_file(file_name, experiment_context:str,
                                     data_context:DataContext,
                                     training_context:TrainingContext,
                                     experiment, #TO DO set object type
-                                    evaluation_results #TO DO pass class objects. for now passing dict object
+                                    evaluation_results=None #TO DO pass class objects. for now passing dict object
                                     ):
 
     # Define the CSV field names for training context and evaluation results
-    fieldnames = ["time_stamp","info","Epochs", "Learning Rate", "hidden_layer_dimension","num_layers", "Model", 
+    fieldnames = ["time_stamp","info","Epochs", "Learning Rate", "hidden_layer_dimension","num_layers","num_bases", "Model", 
                   "accuracy", "precision", "recall","F1","model_directory","triples_path","entities_labels_path",
                   "properties_labels_path","graph_embeddings_path"]
     file_path = os.path.join(EXPERIMENT_RESULTS_PATH["eval_results"], file_name)
     # Create a dictionary with the data to be saved
-    data = {
+    if evaluation_results == None:
+        data = {
 
         "time_stamp":datetime.datetime.now().strftime("%Y:%m:%d %H:%M:%S"),
         "info":experiment_context,
@@ -53,18 +55,51 @@ def save_experiment_results_to_file(file_name, experiment_context:str,
         "Learning Rate": training_context.learning_rate,
         "hidden_layer_dimension": training_context.dim_hidden_layer,
         "num_layers":training_context.num_layers,
+        "num_bases":training_context.num_bases,
 
         "Model": experiment.model,
         "model_directory":experiment.experiment_results_folder_path,
 
         # evaluation results
-        "accuracy": evaluation_results["accuracy"],
-        "precision": evaluation_results["precision"],
-        "recall": evaluation_results["recall"],
-        "F1":evaluation_results["F1"],
+        
+        "accuracy": None ,
+        "precision": None,
+        "recall": None ,
+        "F1": None,
 
     
     }
+        
+    else:
+        data = {
+
+            "time_stamp":datetime.datetime.now().strftime("%Y:%m:%d %H:%M:%S"),
+            "info":experiment_context,
+            #data context
+            "triples_path" : data_context.triples_path,
+            "entities_labels_path" : data_context.entities_labels_path,
+            "properties_labels_path" : data_context.properties_labels_path,
+            "graph_embeddings_path" : data_context.graph_embeddings_path,
+
+            # training context
+            "Epochs": training_context.num_epochs,
+            "Learning Rate": training_context.learning_rate,
+            "hidden_layer_dimension": training_context.dim_hidden_layer,
+            "num_layers":training_context.num_layers,
+            "num_bases":training_context.num_bases,
+
+            "Model": experiment.model,
+            "model_directory":experiment.experiment_results_folder_path,
+
+            # evaluation results
+            
+            "accuracy": evaluation_results["accuracy"],
+            "precision": evaluation_results["precision"],
+            "recall": evaluation_results["recall"],
+            "F1":evaluation_results["F1"],
+
+        
+        }
 
     # Check if the file exists to decide whether to write headers or not
     file_exists = False
@@ -142,3 +177,66 @@ def evaluate_qa_model(trained_model_path, qa_data_builder, model_name):
     eval_res = pd.DataFrame.from_records(res,columns=["q_idx","actual_answer_nodes","predicted_answer_nodes","probabilities_of_answer_nodes","count_predicted_nodes","is_predicted_in_actual"])
     eval_res.to_csv(os.path.join(trained_model_path,"evaluation_results.csv"),index=False)
     logger.info("Evaluation results saved.")
+
+
+class QAEvaluationMetrcis:
+    def __init__(self,model_prediction_path:str):
+
+        
+        self.evaluation_results = pd.read_csv(os.path.join(model_prediction_path,'evaluation_results.csv'))
+        
+        # reads columns as lists instead of strings
+        list_type_columns = ['actual_answer_nodes','predicted_answer_nodes', 'probabilities_of_answer_nodes']
+        for col in list_type_columns:
+            self.evaluation_results[col] = self.evaluation_results[col].apply(lambda x : ast.literal_eval(x) if type(x)==str else [])
+
+        #one_answer_mask = self.evaluation_results['actual_answer_nodes'].apply(lambda x : True if len(x)==1 else False )
+
+    def hits_at_k(self,predictions, actual, k):
+        hits = 0
+        for pred_nodes, actual_node in zip(predictions, actual):
+            if any(node in pred_nodes[:k] for node in actual_node):
+                hits += 1
+        return hits / len(predictions)
+
+    
+    def reciprocal_rank(self, predictions, actual):
+        ranks = []
+        for pred_nodes, actual_node in zip(predictions, actual):
+            if any(node in pred_nodes for node in actual_node):
+                rank = pred_nodes.index(actual_node[0]) + 1 if actual_node[0] in pred_nodes else 0
+                ranks.append(1 / rank if rank > 0 else 0)
+        return sum(ranks) / len(predictions)
+    
+    def precision_at_k(self,predictions, actual, k):
+        correct_predictions = 0
+        total_predictions = 0
+        for pred_nodes, actual_node in zip(predictions, actual):
+            correct_predictions += len(set(pred_nodes[:k]) & set(actual_node))
+            total_predictions += k
+        return correct_predictions / total_predictions
+    
+    def recall_at_k(self, predictions, actual, k):
+        correct_predictions = 0
+        total_actual = 0
+        for pred_nodes, actual_node in zip(predictions, actual):
+            correct_predictions += len(set(pred_nodes[:k]) & set(actual_node))
+            total_actual += len(actual_node)
+        return correct_predictions / total_actual
+
+    def run_evaluation(self):
+
+        self.hits_1 = self.hits_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=1)
+        self.hits_3 = self.hits_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=3)
+        self.hits_5 = self.hits_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=5)
+        self.mrr = self.reciprocal_rank(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'])
+        self.recall_1 = self.recall_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=1)
+        self.recall_3 = self.recall_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=3)
+        self.recall_5 = self.recall_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=5)
+        self.precision_1 = self.precision_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=1)
+        self.precision_3 = self.precision_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=3)
+        self.precision_5 = self.precision_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=5)
+                
+        return self.hits_1, self.hits_3, self.hits_5, self.mrr, self.precision_1, self.precision_3 ,self.precision_5, self.recall_1, self.recall_3, self.recall_5
+
+

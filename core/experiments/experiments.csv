@@ -21,3 +21,27 @@ time_stamp,info,Epochs,Learning Rate,hidden_layer_dimension,num_layers,Model,acc
     (6): GCNConv(256, 105)
   )
 )",85.40%,,,,./core/experiments/multi_class_classification/results\20230810145742,./data/source_data/VAD_triples.csv,./data/source_data/VAD_entities.csv,./data/source_data/VAD_properties.csv,./data/graph_embeddings
+2023:08:26 14:34:51,Task: QA with GNN,20,0.01,16,2,90,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",,,,,./core/experiments/qa/results\20230826143343,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:26 14:46:23,Task: QA with GNN,20,0.01,16,2,90,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",,,,,./core/experiments/qa/results\20230826144520,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:26 14:50:51,Task: QA with GNN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",,,,,./core/experiments/qa/results\20230826144947,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old

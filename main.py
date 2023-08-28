@@ -1,5 +1,5 @@
 from core.NeuralNet.MLP import MLP
-from core.experiments.utils import (save_experiment_results_to_file,evaluate_model)
+from core.experiments.utils import (save_experiment_results_to_file,evaluate_model, QAEvaluationMetrcis)
 from core.experiments.ContextClasses import (DataContext, TrainingContext, QADataContext)
 from core.experiments.binary_classification.binary_classification_experiment import (
     BinaryClassificationExperiment,
@@ -25,6 +25,8 @@ from config.config import (
     QUESTIONS_CONCEPTS_ANSWERS_PATH,
     GRAPH_EMBEDDINGS_PATH_OLD,
     QUESTIONS_EMBEDDINGS_PATH,
+    QA_TRAINING_FILE_PATH,
+    QA_TESTING_FILE_PATH
 )
 from core.NeuralNet.MLP import MLP
 from core.NeuralNet.GNN import GCN, RGCN
@@ -34,7 +36,7 @@ import sys
 logger.remove()
 logger.add(sys.stderr, level="DEBUG")
 
-# EXPERIMENT 1
+# Binary Classification Experiment
 '''
 training_context = TrainingContext(num_epochs = 1000,
                                    learning_rate = 0.01,
@@ -158,33 +160,30 @@ save_experiment_results_to_file(file_name = "experiments.csv",
                                 )
 '''
 
-# QA experiment
+# QA experiments
 
-training_context = TrainingContext(num_epochs = 20,
+training_context = TrainingContext(info = "Task: QA with GNN",
+                                   num_epochs = 20,
                                    learning_rate = 0.01,
                                    num_layers=2,
                                    dim_hidden_layer = 16,
-                                   num_bases= 90
+                                   num_bases= None
                                     )
 
 data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
                            entities_labels_path = ENTITIES_LABELS_PATH_OLD,
                            properties_labels_path = PROPERTIES_LABELS_PATH_OLD,
                            graph_embeddings_path = GRAPH_EMBEDDINGS_PATH_OLD,
-                           questions_concepts_answers_path=QUESTIONS_CONCEPTS_ANSWERS_PATH,
+                           training_questions_concepts_answers_file_path=QA_TRAINING_FILE_PATH,
+                           testing_questions_concepts_answers_file_path=QA_TESTING_FILE_PATH,
                            questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH)
 
 qa_experiment = QAExperiment(
     training_context=training_context,
     data_context=data_context,
-    model_type=RGCN,
+    model_type=RGCN
 )
-# TRAIN
-qa_experiment.train()
+# TRAIN, SAVE & EVAL
+qa_experiment.run()
 
-
-# SAVE
-
-qa_experiment.save_model()
-qa_experiment.eval() # getting memory error when training and evaluation are done at the same time in server
 

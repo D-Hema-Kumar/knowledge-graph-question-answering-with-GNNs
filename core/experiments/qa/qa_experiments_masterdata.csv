@@ -1,0 +1,17 @@
+time_stamp,info,Epochs,Learning Rate,hidden_dimension,num_layers,num_bases,Model,hits@1,hits@3,hits@5,mrr,precision@1,precision@3,precision@5,recall@1,recall@3,recall@5,model_directory,triples_path,entities_labels_path,properties_labels_path,graph_embeddings_path
+2023:08:28 17:04:29,Task: QA with GNN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results\20230828170236,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:28 18:31:54,Task: QA with GNN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results\20230828183025,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old

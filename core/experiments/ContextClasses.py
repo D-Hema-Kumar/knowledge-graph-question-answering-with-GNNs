@@ -19,7 +19,18 @@ class TrainingContext(object):
     '''The training context class creates an object that contains all the attributes that represent
     training_context of the experiment'''
 
-    def __init__(self, num_epochs:int,learning_rate:float,dim_hidden_layer:int,num_layers=3,num_bases=None):
+    def __init__(
+            self,  
+            info:str, 
+            num_epochs:int, 
+            learning_rate:float,
+            dim_hidden_layer:int,
+            num_layers=3,
+            train_ratio=0.8,
+            num_bases=None):
+
+        self.info = info
+        self.train_ratio = train_ratio
         self.num_epochs = num_epochs
         self.learning_rate = learning_rate
         self.dim_hidden_layer = dim_hidden_layer
@@ -33,7 +44,8 @@ class QADataContext(DataContext):
         entities_labels_path,
         properties_labels_path,
         graph_embeddings_path,
-        questions_concepts_answers_path,
+        training_questions_concepts_answers_file_path,
+        testing_questions_concepts_answers_file_path,
         questions_embeddings_path
     ):
         
@@ -43,7 +55,8 @@ class QADataContext(DataContext):
                          properties_labels_path,
                          graph_embeddings_path
                 )
-        self.questions_concepts_answers_path = questions_concepts_answers_path
+        self.training_questions_concepts_answers_file_path = training_questions_concepts_answers_file_path
+        self.testing_questions_concepts_answers_file_path = testing_questions_concepts_answers_file_path
         self.questions_embeddings_path = questions_embeddings_path
 
 

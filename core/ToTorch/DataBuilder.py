@@ -289,7 +289,8 @@ class QAMaskBuilder(DataBuilder):
     entities_labels_path,
     properties_labels_path,
     embeddings_path,
-    questions_concepts_answers_path,
+    training_questions_concepts_answers_file_path,
+    testing_questions_concepts_answers_file_path,
     questions_embeddings_path,
     labeler=None,
     ):
@@ -300,14 +301,17 @@ class QAMaskBuilder(DataBuilder):
             embeddings_path,
             labeler,
         )
-        self.question_concepts_answers = (
-            pd.read_csv(questions_concepts_answers_path)
-    
-        )
+        self.training_questions_concepts_answers = (
+            pd.read_csv(training_questions_concepts_answers_file_path)
+            )
+        self.testing_questions_concepts_answers = (
+            pd.read_csv(testing_questions_concepts_answers_file_path)
+            )
         # reads columns as lists instead of strings
         list_columns = ['concepts', 'answers']
         for col in list_columns:
-            self.question_concepts_answers[col] = self.question_concepts_answers[col].apply(ast.literal_eval)
+            self.training_questions_concepts_answers[col] = self.training_questions_concepts_answers[col].apply(ast.literal_eval)
+            self.testing_questions_concepts_answers[col] = self.testing_questions_concepts_answers[col].apply(ast.literal_eval)
         
         #load question embeddings
         self.questions_to_embeddings = {}

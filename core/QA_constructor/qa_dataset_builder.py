@@ -2,11 +2,14 @@ from config.config import  (
     ENTITIES_LABELS_PATH_OLD,
     PROPERTIES_LABELS_PATH_OLD,
     VAD_KGQA_GoldStandard,
-    QUESTIONS_CONCEPTS_ANSWERS_PATH)
+    QUESTIONS_CONCEPTS_ANSWERS_PATH,
+    SOURCE_DATA_PATH_OLD)
 
 import json
+import os
 from tqdm import tqdm
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 class QADatasetBuilder():
     '''The class is for creating a QA dataset which will contain pattern_id, question, concepts, answers for each question.
@@ -14,11 +17,14 @@ class QADatasetBuilder():
     def __init__(
         self,
         entities_labels_path,
+        KGQA_GoldStandard,
+        source_data_path,
         properties_labels_path=None,
-    ):
+        ):
 
         self.entities_data = pd.read_csv(entities_labels_path)
-
+        self.KGQA_GoldStandard = KGQA_GoldStandard
+        self.source_data_path = source_data_path
         self.entity_to_index = {
             entity: index
             for index, entity in enumerate(self.entities_data.iloc[:, 0].to_list())
@@ -35,9 +41,9 @@ class QADatasetBuilder():
                 conceptIds.append(self.entity_to_index[concept])
         return conceptIds
     
-    def create_qa_dataset(self):
+    def create_qa_train_test_datasets(self):
     
-        with open(VAD_KGQA_GoldStandard) as gs:
+        with open(self.KGQA_GoldStandard) as gs:
             print(gs)
             data = json.load(gs)
 
@@ -68,15 +74,40 @@ class QADatasetBuilder():
         answer_ids_mask = questions_data['answer_ids'].str.len()>0
 
         #save resource type questions
-        resource_type_QA = questions_data[questions_data['answertype'].isin(['resources','resource'])& concept_ids_mask & answer_ids_mask ].copy()
-        resource_type_QA.drop_duplicates(subset='question', keep='first', inplace=True)
-        print('Total questions: ',len(resource_type_QA))
-        print('Total questions with more than 1 answer:',len(resource_type_QA[resource_type_QA['count_answers']>1]))
-        print('Total questions with more than 2 concepts:',len(resource_type_QA[resource_type_QA['count_concepts']>2]))
-        resource_type_QA[['pattern_id', 'question', 'concepts', 'answers']].to_csv(QUESTIONS_CONCEPTS_ANSWERS_PATH,index=False)
-        print(f'QA data is saved to file:  {QUESTIONS_CONCEPTS_ANSWERS_PATH}')
+        self.resource_type_QA = questions_data[questions_data['answertype'].isin(['resources','resource'])& concept_ids_mask & answer_ids_mask ].copy()
+        self.resource_type_QA.drop_duplicates(subset='question', keep='first', inplace=True)
+        self.resource_type_QA = self.resource_type_QA.reset_index(drop=True)
+        print('Total questions: ',len(self.resource_type_QA))
+        print('Total questions with more than 1 answer:',len(self.resource_type_QA[self.resource_type_QA['count_answers']>1]))
+        print('Total questions with more than 2 concepts:',len(self.resource_type_QA[self.resource_type_QA['count_concepts']>2]))
+        self.resource_type_QA[['pattern_id', 'question', 'concepts', 'answers']].to_csv(os.path.join(self.source_data_path,'resource_type_questions_concepts_answers.csv'),index=False)
+        train_indices, test_indices = self.get_train_test_indices(self.resource_type_QA[['pattern_id', 'question', 'concepts', 'answers']])
+
+        QA_training_data = self.resource_type_QA[['pattern_id', 'question', 'concepts', 'answers']].iloc[train_indices]
+        QA_testing_data = self.resource_type_QA[['pattern_id', 'question', 'concepts', 'answers']].iloc[test_indices]
+
+        QA_training_data = QA_training_data.reset_index(drop=True)
+        QA_testing_data = QA_testing_data.reset_index(drop=True)
+
+        QA_training_data.to_csv(os.path.join(self.source_data_path,'qa_training_data.csv'),index=False)
+        QA_testing_data.to_csv(os.path.join(self.source_data_path,'qa_testing_data.csv'),index=False)
+        print(f'{len(QA_training_data)} training questions saved.')
+        print(f'{len(QA_testing_data)} testing questions saved.')
+
+    
+    def get_train_test_indices(self,question_concepts_answers):
+        train_ratio = 0.75
+        train_indices = []
+        test_indices = []
+        for _, group_df in question_concepts_answers.groupby('pattern_id'):
+            train_group_indices, test_group_indices = train_test_split(group_df.index, train_size=train_ratio, random_state=42)
+            train_indices.extend(train_group_indices)
+            test_indices.extend(test_group_indices)
+        return train_indices, test_indices
 
 if __name__ == "__main__":
 
-    qa_dataset_builder = QADatasetBuilder(entities_labels_path=ENTITIES_LABELS_PATH_OLD)
-    qa_dataset_builder.create_qa_dataset()
+    qa_dataset_builder = QADatasetBuilder(entities_labels_path=ENTITIES_LABELS_PATH_OLD,
+                                          KGQA_GoldStandard=VAD_KGQA_GoldStandard,
+                                          source_data_path=SOURCE_DATA_PATH_OLD)
+    qa_dataset_builder.create_qa_train_test_datasets()
