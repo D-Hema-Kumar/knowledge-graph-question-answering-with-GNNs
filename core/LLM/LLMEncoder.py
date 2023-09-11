@@ -3,12 +3,14 @@ import pandas as pd
 import numpy as np
 import os
 from loguru import logger
+from tqdm import tqdm
 from config.config import ( 
     PROPERTIES_LABELS_PATH, 
     QUESTIONS_ANSWERS_PATH, 
     GRAPH_EMBEDDINGS_PATH, 
     ENTITIES_LABELS_PATH,
-    QUESTIONS_CONCEPTS_ANSWERS_PATH
+    QUESTIONS_CONCEPTS_ANSWERS_PATH,
+    MetaQA_CONFIG
 )
 
 class LLMEncoder:
@@ -36,7 +38,7 @@ class LLMEncoder:
         """
         logger.info("Generating encodings.")
         res = {}
-        for sentence in list_input_sentences:
+        for sentence in tqdm(list_input_sentences):
             res[sentence] = self.encode_sentence(sentence)
         return res
 
@@ -47,15 +49,19 @@ class LLMEncoder:
         logger.info("Saving encodings.")
         np.savez(file_path, **encodings)
 
-    def generate_encodings_for_entities_labels(self, entities_labels_path, base_path):
+    def generate_encodings_for_entities_labels(self, entities_labels_path, base_path,vad_kb):
         logger.info("Generating encodings for Entities.")
-        entities_data = pd.read_csv(entities_labels_path)
-        mask = entities_data.iloc[:, 1].isna()
-        entities_data.loc[mask, "label"] = (
-            entities_data[entities_data.iloc[:, 1].isna()]
-            .iloc[:, 0]
-            .apply(lambda x: x.split("/")[-1])
-        )  # deal with missing labels
+        if vad_kb:
+            entities_data = pd.read_csv(entities_labels_path)
+            mask = entities_data.iloc[:, 1].isna()
+            entities_data.loc[mask, "label"] = (
+                entities_data[entities_data.iloc[:, 1].isna()]
+                .iloc[:, 0]
+                .apply(lambda x: x.split("/")[-1])
+            )  # deal with missing labels
+        else:
+            entities_data = pd.read_csv(entities_labels_path,delimiter='\t')
+
         encodings = self.generate_encodings_dict(entities_data["label"].to_list())
         self.save_encodings(encodings, os.path.join(base_path, "entities"))
 
@@ -124,3 +130,26 @@ if __name__ == "__main__":
     #llm_encoder.generate_encodings_for_questions(
     #    question_answers_path=QUESTIONS_CONCEPTS_ANSWERS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
     #)
+    
+    # Encode MetaQA
+    '''
+    llm_encoder.generate_encodings_for_entities_labels(
+        entities_labels_path=MetaQA_CONFIG["ENTITIES_LABELS_PATH"],
+        base_path=MetaQA_CONFIG["GRAPH_EMBEDDINGS_PATH"],
+        vad_kb=False
+     )
+    llm_encoder.generate_encodings_for_properties_labels(
+        properties_labels_path=MetaQA_CONFIG["PROPERTIES_LABELS_PATH"],
+        base_path=MetaQA_CONFIG["GRAPH_EMBEDDINGS_PATH"],
+     )
+     '''
+    llm_encoder.generate_encodings_for_questions(
+        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TRAIN_PATH"], 
+        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_1_HOP_TRAIN_PATH"]
+    )
+
+    llm_encoder.generate_encodings_for_questions(
+        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TEST_PATH"], 
+        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_1_HOP_TEST_PATH"]
+    )
+

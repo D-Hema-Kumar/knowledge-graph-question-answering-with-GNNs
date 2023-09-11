@@ -223,6 +223,24 @@ class QAEvaluationMetrcis:
             correct_predictions += len(set(pred_nodes[:k]) & set(actual_node))
             total_actual += len(actual_node)
         return correct_predictions / total_actual
+    
+    def f1_score(self,predictions, ground_truths):
+
+        f1_scores = []
+        for pred, truths in zip(predictions, ground_truths):
+            if len(pred)==0:
+                precision = 0.0
+                recall = 0.0
+            else:
+                precision = len(set(pred) & set(truths)) / len(pred)
+                recall = len(set(pred) & set(truths)) / len(truths)
+            if precision + recall > 0:
+                f1 = 2 * (precision * recall) / (precision + recall)
+            else:
+                f1 = 0
+            f1_scores.append(f1)
+
+        return sum(f1_scores) / len(predictions)
 
     def run_evaluation(self):
 
@@ -236,6 +254,7 @@ class QAEvaluationMetrcis:
         self.precision_1 = self.precision_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=1)
         self.precision_3 = self.precision_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=3)
         self.precision_5 = self.precision_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=5)
+        self.f1 = self.f1_score(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'])
                 
         return self.hits_1, self.hits_3, self.hits_5, self.mrr, self.precision_1, self.precision_3 ,self.precision_5, self.recall_1, self.recall_3, self.recall_5
 

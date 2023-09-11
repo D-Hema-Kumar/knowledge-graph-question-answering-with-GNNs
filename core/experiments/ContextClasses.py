@@ -46,7 +46,11 @@ class QADataContext(DataContext):
         graph_embeddings_path,
         training_questions_concepts_answers_file_path,
         testing_questions_concepts_answers_file_path,
-        questions_embeddings_path
+        training_questions_embeddings_path,
+        testing_questions_embeddings_path,
+        training_subgraphs_file_path= None,
+        testing_subgraphs_file_path=None,
+        is_vad_kb=True
     ):
         
         super().__init__( 
@@ -57,7 +61,11 @@ class QADataContext(DataContext):
                 )
         self.training_questions_concepts_answers_file_path = training_questions_concepts_answers_file_path
         self.testing_questions_concepts_answers_file_path = testing_questions_concepts_answers_file_path
-        self.questions_embeddings_path = questions_embeddings_path
+        self.training_questions_embeddings_path = training_questions_embeddings_path
+        self.testing_questions_embeddings_path = testing_questions_embeddings_path
+        self.is_vad_kb = is_vad_kb
+        self.training_subgraphs_file_path= training_subgraphs_file_path
+        self.testing_subgraphs_file_path=testing_subgraphs_file_path
 
 
 

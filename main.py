@@ -8,7 +8,7 @@ from core.experiments.multi_class_classification.multi_class_classification_expe
     MultiClassificationExperiment,
 )
 
-from core.experiments.qa.qa_experiment import (QAExperiment,)
+from core.experiments.qa.qa_experiment import (QAExperiment, MetaQAExperiment)
 from config.config import (
     TRIPLES_PATH,
     ENTITIES_LABELS_PATH,
@@ -26,15 +26,16 @@ from config.config import (
     GRAPH_EMBEDDINGS_PATH_OLD,
     QUESTIONS_EMBEDDINGS_PATH,
     QA_TRAINING_FILE_PATH,
-    QA_TESTING_FILE_PATH
+    QA_TESTING_FILE_PATH,
+    MetaQA_CONFIG
 )
 from core.NeuralNet.MLP import MLP
-from core.NeuralNet.GNN import GCN, RGCN
+from core.NeuralNet.GNN import GCN, RGCN, RGAT
 from loguru import logger
 import sys
 
 logger.remove()
-logger.add(sys.stderr, level="DEBUG")
+logger.add(sys.stderr, level="INFO")
 
 # Binary Classification Experiment
 '''
@@ -160,8 +161,8 @@ save_experiment_results_to_file(file_name = "experiments.csv",
                                 )
 '''
 
-# QA experiments
-
+# QA VAD experiments
+'''
 training_context = TrainingContext(info = "Task: QA with GNN",
                                    num_epochs = 20,
                                    learning_rate = 0.01,
@@ -178,11 +179,44 @@ data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
                            testing_questions_concepts_answers_file_path=QA_TESTING_FILE_PATH,
                            questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH)
 
-qa_experiment = QAExperiment(
-    training_context=training_context,
-    data_context=data_context,
-    model_type=RGCN
-)
+for i in range(20):
+    qa_experiment = QAExperiment(
+        training_context=training_context,
+        data_context=data_context,
+        model_type=GCN
+    )
+    # TRAIN, SAVE & EVAL
+    qa_experiment.run() 
+
+'''
+# QA MetaQA Experiments
+
+training_context = TrainingContext(info = "Task: MetaQA with GNN",
+                                   num_epochs = 2,
+                                   learning_rate = 0.01,
+                                   num_layers=2,
+                                   dim_hidden_layer = 16,
+                                   num_bases= None
+                                    )
+
+data_context = QADataContext(   triples_path=MetaQA_CONFIG['KB_PATH'],
+                                entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
+                                properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
+                                graph_embeddings_path=MetaQA_CONFIG['GRAPH_EMBEDDINGS_PATH'],
+                                training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
+                                testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
+                                training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH'],
+                                testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH'],
+                                training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_DEV_FILE_PATH'],
+                                testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_DEV_FILE_PATH'],
+                                is_vad_kb=False
+                            )
+
+qa_experiment = MetaQAExperiment(
+        training_context=training_context,
+        data_context=data_context,
+        model_type=GCN
+    )
 # TRAIN, SAVE & EVAL
 qa_experiment.run()
 

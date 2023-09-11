@@ -1,17 +1,1164 @@
 time_stamp,info,Epochs,Learning Rate,hidden_dimension,num_layers,num_bases,Model,hits@1,hits@3,hits@5,mrr,precision@1,precision@3,precision@5,recall@1,recall@3,recall@5,model_directory,triples_path,entities_labels_path,properties_labels_path,graph_embeddings_path
-2023:08:28 17:04:29,Task: QA with GNN,20,0.01,16,2,,"RGCN(
+2023:08:28 23:34:16,Task: QA with GNN,20,0.01,16,2,,"RGCN(
   (layers): ModuleList(
     (0): RGCNConv(1536, 16, num_relations=193)
     (1): ReLU()
     (2): Dropout(p=0.2, inplace=False)
     (3): RGCNConv(16, 2, num_relations=193)
   )
-)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results\20230828170236,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
-2023:08:28 18:31:54,Task: QA with GNN,20,0.01,16,2,,"RGCN(
+)",0.8211143695014663,0.9281524926686217,0.9369501466275659,0.8216531310006386,0.8211143695014663,0.3704789833822092,0.23929618768328445,0.6086956521739131,0.8239130434782609,0.8869565217391304,./core/experiments/qa/results/20230828185243,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:29 16:28:48,Task: QA with GNN,2,0.01,16,2,30,"RGCN(
   (layers): ModuleList(
     (0): RGCNConv(1536, 16, num_relations=193)
     (1): ReLU()
     (2): Dropout(p=0.2, inplace=False)
     (3): RGCNConv(16, 2, num_relations=193)
   )
-)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results\20230828183025,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+)",0.5557184750733137,0.8269794721407625,0.9237536656891495,0.6842783032850938,0.5557184750733137,0.3172043010752688,0.22844574780058652,0.41195652173913044,0.7054347826086956,0.8467391304347827,./core/experiments/qa/results/20230829155758,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:29 17:37:15,Task: QA with GNN,20,0.01,16,2,30,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.3020527859237537,0.4574780058651026,0.6055718475073314,0.40056466958933495,0.3020527859237537,0.16959921798631475,0.14516129032258066,0.22391304347826088,0.37717391304347825,0.5380434782608695,./core/experiments/qa/results/20230829164216,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:29 19:52:25,Task: QA with GNN,20,0.01,16,2,30,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.6759530791788856,0.8211143695014663,0.9090909090909091,0.7334616533335468,0.6759530791788856,0.3172043010752688,0.22580645161290322,0.5010869565217392,0.7054347826086956,0.8369565217391305,./core/experiments/qa/results/20230829151329,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:29 20:26:14,Task: QA with GCN,2,0.01,16,2,50,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.20234604105571846,0.3563049853372434,0.49853372434017595,0.29195010331412824,0.20234604105571846,0.13636363636363635,0.12346041055718475,0.15,0.3032608695652174,0.45760869565217394,./core/experiments/qa/results/20230829202022,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:30 01:43:37,Task: QA with GCN,20,0.01,16,2,50,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.5733137829912024,0.8357771260997068,0.8724340175953079,0.6551258349828725,0.5733137829912024,0.32746823069403713,0.21964809384164222,0.425,0.7282608695652174,0.8141304347826087,./core/experiments/qa/results/20230829203228,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:30 13:19:13,Task: QA with RGCN,20,0.01,16,2,80,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.5278592375366569,0.5689149560117303,0.5791788856304986,0.537719863819388,0.5278592375366569,0.22043010752688172,0.14017595307917888,0.391304347826087,0.4902173913043478,0.5195652173913043,./core/experiments/qa/results/20230830080104,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:30 13:36:30,Task: QA with RGCN,20,0.01,16,2,30,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.6803519061583577,0.8709677419354839,0.8958944281524927,0.7370049957399305,0.6803519061583577,0.3391984359726295,0.22903225806451613,0.5043478260869565,0.7543478260869565,0.8489130434782609,./core/experiments/qa/results/20230830082302,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:30 19:39:45,Task: QA with RGCN,20,0.01,16,2,100,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results/20230830143028,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 02:16:01,Task: QA with RGCN,20,0.01,16,2,90,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.3592375366568915,0.5586510263929618,0.5747800586510264,0.4339711793731886,0.3592375366568915,0.21065493646138808,0.136950146627566,0.266304347826087,0.46847826086956523,0.5076086956521739,./core/experiments/qa/results/20230830210841,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 11:35:07,Task: QA with RGCN,20,0.01,16,2,130,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results/20230831062508,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 11:36:35,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8049853372434017,0.8958944281524927,0.9149560117302052,0.7975189684867122,0.8049853372434017,0.3533724340175953,0.23548387096774193,0.5967391304347827,0.7858695652173913,0.8728260869565218,./core/experiments/qa/results/20230831063033,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 12:46:27,Task: QA with RGCN,1,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6774193548387096,0.8577712609970675,0.8870967741935484,0.7330555238179864,0.6774193548387096,0.3387096774193548,0.22609970674486804,0.5021739130434782,0.7532608695652174,0.8380434782608696,./core/experiments/qa/results/20230831124539,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 13:00:53,Task: QA with RGCN,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7155425219941349,0.8768328445747801,0.8914956011730205,0.7831070918616208,0.7155425219941349,0.3455522971652004,0.2219941348973607,0.5304347826086957,0.7684782608695652,0.8228260869565217,./core/experiments/qa/results/20230831125119,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 13:15:00,Task: QA with RGCN,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6290322580645161,0.8343108504398827,0.8651026392961877,0.7062833398217848,0.6290322580645161,0.3201368523949169,0.212316715542522,0.46630434782608693,0.7119565217391305,0.7869565217391304,./core/experiments/qa/results/20230831130619,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 14:54:16,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8665689149560117,0.906158357771261,0.9178885630498533,0.8348314054516098,0.8665689149560117,0.36950146627565983,0.2378299120234604,0.6423913043478261,0.8217391304347826,0.8815217391304347,./core/experiments/qa/results/20230831130905,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 15:59:02,Task: QA with RGCN,20,0.01,16,3,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 16, num_relations=193)
+    (4): ReLU()
+    (5): Dropout(p=0.2, inplace=False)
+    (6): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8328445747800587,0.9340175953079178,0.9516129032258065,0.8302721701850566,0.8328445747800587,0.37683284457478006,0.24486803519061584,0.6173913043478261,0.8380434782608696,0.907608695652174,./core/experiments/qa/results/20230831133011,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 16:17:05,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.7785923753665689,0.9046920821114369,0.9134897360703812,0.7884142833209054,0.7785923753665689,0.36412512218963833,0.2343108504398827,0.5771739130434783,0.8097826086956522,0.8684782608695653,./core/experiments/qa/results/20230831160542,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 16:28:31,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8680351906158358,0.9208211143695014,0.9281524926686217,0.826229281471217,0.8680351906158358,0.37390029325513197,0.23929618768328445,0.6434782608695652,0.8315217391304348,0.8869565217391304,./core/experiments/qa/results/20230831161705,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 16:39:51,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8577712609970675,0.9105571847507331,0.9149560117302052,0.8394030700482314,0.8577712609970675,0.36950146627565983,0.23665689149560118,0.6358695652173914,0.8217391304347826,0.8771739130434782,./core/experiments/qa/results/20230831162831,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 16:51:14,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.7272727272727273,0.9002932551319648,0.9046920821114369,0.7742166435714822,0.7272727272727273,0.36119257086999024,0.23255131964809383,0.5391304347826087,0.8032608695652174,0.8619565217391304,./core/experiments/qa/results/20230831163951,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 17:02:25,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.873900293255132,0.9120234604105572,0.9281524926686217,0.8298763512473192,0.873900293255132,0.37145650048875856,0.2404692082111437,0.6478260869565218,0.8260869565217391,0.8913043478260869,./core/experiments/qa/results/20230831151720,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 17:02:40,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.781524926686217,0.8944281524926686,0.9090909090909091,0.7969736804414229,0.781524926686217,0.36119257086999024,0.23401759530791788,0.5793478260869566,0.8032608695652174,0.8673913043478261,./core/experiments/qa/results/20230831165114,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 17:14:01,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8137829912023461,0.9134897360703812,0.9325513196480938,0.8177390634254097,0.8137829912023461,0.36901270772238515,0.23988269794721406,0.6032608695652174,0.8206521739130435,0.8891304347826087,./core/experiments/qa/results/20230831170240,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 17:25:19,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.843108504398827,0.9105571847507331,0.9208211143695014,0.8184676590356816,0.843108504398827,0.36901270772238515,0.2378299120234604,0.625,0.8206521739130435,0.8815217391304347,./core/experiments/qa/results/20230831171401,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 17:36:50,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8313782991202346,0.9208211143695014,0.9208211143695014,0.8157309699098557,0.8313782991202346,0.3709677419354839,0.2375366568914956,0.616304347826087,0.825,0.8804347826086957,./core/experiments/qa/results/20230831172519,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 17:48:05,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.7272727272727273,0.8929618768328446,0.9193548387096774,0.7731520908508999,0.7272727272727273,0.3626588465298143,0.23695014662756597,0.5391304347826087,0.8065217391304348,0.8782608695652174,./core/experiments/qa/results/20230831173650,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 17:59:29,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8680351906158358,0.9120234604105572,0.9208211143695014,0.8442006048979487,0.8680351906158358,0.3704789833822092,0.2378299120234604,0.6434782608695652,0.8239130434782609,0.8815217391304347,./core/experiments/qa/results/20230831174805,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 18:10:56,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8782991202346041,0.9164222873900293,0.9208211143695014,0.8473213274468234,0.8782991202346041,0.37194525904203324,0.2375366568914956,0.6510869565217391,0.8271739130434783,0.8804347826086957,./core/experiments/qa/results/20230831175929,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 18:22:25,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8504398826979472,0.9120234604105572,0.9149560117302052,0.8179417675273852,0.8504398826979472,0.3675464320625611,0.23548387096774193,0.6304347826086957,0.8173913043478261,0.8728260869565218,./core/experiments/qa/results/20230831181056,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 18:33:46,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8225806451612904,0.9134897360703812,0.9178885630498533,0.820178884328445,0.8225806451612904,0.36852394916911047,0.23636363636363636,0.6097826086956522,0.8195652173913044,0.8760869565217392,./core/experiments/qa/results/20230831182225,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 18:45:03,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.873900293255132,0.9164222873900293,0.9237536656891495,0.8379171903365452,0.873900293255132,0.3709677419354839,0.23812316715542522,0.6478260869565218,0.825,0.8826086956521739,./core/experiments/qa/results/20230831183346,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 18:47:23,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8357771260997068,0.9017595307917888,0.9149560117302052,0.8189275777985453,0.8357771260997068,0.364613880742913,0.23548387096774193,0.6195652173913043,0.8108695652173913,0.8728260869565218,./core/experiments/qa/results/20230831170225,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 18:56:24,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8211143695014663,0.9149560117302052,0.9222873900293255,0.8317330165589933,0.8211143695014663,0.36950146627565983,0.2372434017595308,0.6086956521739131,0.8217391304347826,0.8793478260869565,./core/experiments/qa/results/20230831184503,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 19:07:41,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8225806451612904,0.9178885630498533,0.9237536656891495,0.8074242607986245,0.8225806451612904,0.3699902248289345,0.2375366568914956,0.6097826086956522,0.8228260869565217,0.8804347826086957,./core/experiments/qa/results/20230831185624,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 19:19:00,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8108504398826979,0.9046920821114369,0.9120234604105572,0.8065020199570289,0.8108504398826979,0.364613880742913,0.23519061583577713,0.6010869565217392,0.8108695652173913,0.8717391304347826,./core/experiments/qa/results/20230831190741,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 19:30:28,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8005865102639296,0.907624633431085,0.9310850439882697,0.7969680387340272,0.8005865102639296,0.3655913978494624,0.23900293255131966,0.5934782608695652,0.8130434782608695,0.8858695652173914,./core/experiments/qa/results/20230831191900,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 19:41:49,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8797653958944281,0.9222873900293255,0.9296187683284457,0.8484434281740965,0.8797653958944281,0.36901270772238515,0.23695014662756597,0.6521739130434783,0.8206521739130435,0.8782608695652174,./core/experiments/qa/results/20230831193028,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 19:53:11,Task: QA with RGCN,2,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.781524926686217,0.8797653958944281,0.9120234604105572,0.7655688072110355,0.781524926686217,0.3572825024437928,0.23577712609970675,0.5793478260869566,0.7945652173913044,0.8739130434782608,./core/experiments/qa/results/20230831194149,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 20:32:06,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8885630498533724,0.9178885630498533,0.9222873900293255,0.850148865471446,0.8885630498533724,0.37194525904203324,0.23929618768328445,0.658695652173913,0.8271739130434783,0.8869565217391304,./core/experiments/qa/results/20230831184723,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:02:49,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7126099706744868,0.8533724340175953,0.8870967741935484,0.740282389059773,0.7126099706744868,0.33479960899315736,0.22140762463343108,0.5282608695652173,0.7445652173913043,0.8206521739130435,./core/experiments/qa/results/20230831210134,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:04:08,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7038123167155426,0.8357771260997068,0.8768328445747801,0.7283757329344523,0.7038123167155426,0.3367546432062561,0.22551319648093843,0.5217391304347826,0.7489130434782608,0.8358695652173913,./core/experiments/qa/results/20230831210249,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:05:28,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6818181818181818,0.8621700879765396,0.8900293255131965,0.7525905735151894,0.6818181818181818,0.3308895405669599,0.218475073313783,0.5054347826086957,0.7358695652173913,0.8097826086956522,./core/experiments/qa/results/20230831210408,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:06:55,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6627565982404692,0.8548387096774194,0.8870967741935484,0.7394949174550461,0.6627565982404692,0.3308895405669599,0.2190615835777126,0.49130434782608695,0.7358695652173913,0.8119565217391305,./core/experiments/qa/results/20230831210528,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:08:16,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6847507331378299,0.8387096774193549,0.9002932551319648,0.7355625102161985,0.6847507331378299,0.32160312805474095,0.21788856304985338,0.5076086956521739,0.7152173913043478,0.8076086956521739,./core/experiments/qa/results/20230831210655,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:09:36,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6818181818181818,0.8973607038123167,0.9222873900293255,0.7641014193002285,0.6818181818181818,0.35532746823069405,0.23343108504398827,0.5054347826086957,0.7902173913043479,0.8652173913043478,./core/experiments/qa/results/20230831210816,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:10:53,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7551319648093842,0.9105571847507331,0.9252199413489736,0.8056592261073029,0.7551319648093842,0.3587487781036168,0.2348973607038123,0.5597826086956522,0.7978260869565217,0.8706521739130435,./core/experiments/qa/results/20230831210936,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:11:56,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6422287390029325,0.7697947214076246,0.8152492668621701,0.6796659173748493,0.6422287390029325,0.30254154447702836,0.20205278592375367,0.47608695652173916,0.6728260869565217,0.7489130434782608,./core/experiments/qa/results/20230831211053,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:13:10,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6466275659824047,0.8181818181818182,0.8665689149560117,0.7073226950227139,0.6466275659824047,0.3088954056695992,0.21378299120234603,0.47934782608695653,0.6869565217391305,0.7923913043478261,./core/experiments/qa/results/20230831211156,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:14:23,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6832844574780058,0.8152492668621701,0.907624633431085,0.7400187718709996,0.6832844574780058,0.3069403714565005,0.2217008797653959,0.5065217391304347,0.6826086956521739,0.8217391304347826,./core/experiments/qa/results/20230831211310,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:15:39,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7082111436950147,0.8900293255131965,0.9134897360703812,0.7640042485442893,0.7082111436950147,0.3533724340175953,0.23225806451612904,0.525,0.7858695652173913,0.8608695652173913,./core/experiments/qa/results/20230831211423,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:16:53,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6891495601173021,0.8475073313782991,0.8826979472140762,0.7328102620036386,0.6891495601173021,0.32697947214076245,0.22287390029325513,0.5108695652173914,0.7271739130434782,0.8260869565217391,./core/experiments/qa/results/20230831211539,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:18:09,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6715542521994134,0.844574780058651,0.8914956011730205,0.7206145719708765,0.6715542521994134,0.32649071358748777,0.22111436950146626,0.49782608695652175,0.7260869565217392,0.8195652173913044,./core/experiments/qa/results/20230831211653,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:19:19,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.5967741935483871,0.7888563049853372,0.9032258064516129,0.6752783384748187,0.5967741935483871,0.29521016617790813,0.21994134897360704,0.4423913043478261,0.6565217391304348,0.8152173913043478,./core/experiments/qa/results/20230831211809,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:20:32,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7287390029325513,0.8460410557184751,0.875366568914956,0.7426504130488947,0.7287390029325513,0.3387096774193548,0.22287390029325513,0.5402173913043479,0.7532608695652174,0.8260869565217391,./core/experiments/qa/results/20230831211919,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:21:44,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.655425219941349,0.8621700879765396,0.9046920821114369,0.7135887564165663,0.655425219941349,0.34408602150537637,0.23049853372434018,0.48586956521739133,0.7652173913043478,0.8543478260869565,./core/experiments/qa/results/20230831212032,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:22:59,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.5806451612903226,0.7976539589442815,0.8988269794721407,0.6678890002192984,0.5806451612903226,0.29765395894428154,0.21700879765395895,0.43043478260869567,0.6619565217391304,0.8043478260869565,./core/experiments/qa/results/20230831212144,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:24:16,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.5879765395894428,0.841642228739003,0.8885630498533724,0.6933842110933698,0.5879765395894428,0.3250244379276637,0.21788856304985338,0.4358695652173913,0.7228260869565217,0.8076086956521739,./core/experiments/qa/results/20230831212259,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:25:34,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.47947214076246336,0.8563049853372434,0.8914956011730205,0.6274126296839937,0.47947214076246336,0.3172043010752688,0.21642228739002933,0.35543478260869565,0.7054347826086956,0.8021739130434783,./core/experiments/qa/results/20230831212416,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:26:45,Task: QA with RGCN,2,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7448680351906158,0.8709677419354839,0.9032258064516129,0.772524697524697,0.7448680351906158,0.3484848484848485,0.22697947214076247,0.5521739130434783,0.775,0.841304347826087,./core/experiments/qa/results/20230831212534,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:30:09,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.2727272727272727,0.4868035190615836,0.592375366568915,0.38724132153412744,0.2727272727272727,0.17839687194525905,0.14222873900293256,0.20217391304347826,0.3967391304347826,0.5271739130434783,./core/experiments/qa/results/20230831212903,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:31:12,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.21114369501466276,0.4706744868035191,0.5659824046920822,0.32860370943482775,0.21114369501466276,0.17888563049853373,0.136950146627566,0.1565217391304348,0.3978260869565217,0.5076086956521739,./core/experiments/qa/results/20230831213009,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:32:13,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.21994134897360704,0.34017595307917886,0.4780058651026393,0.29786305025403303,0.21994134897360704,0.12854349951124144,0.1155425219941349,0.16304347826086957,0.2858695652173913,0.4282608695652174,./core/experiments/qa/results/20230831213112,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:33:11,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.34457478005865105,0.4780058651026393,0.6070381231671554,0.4288382074109895,0.34457478005865105,0.18035190615835778,0.14574780058651027,0.2554347826086957,0.40108695652173915,0.5402173913043479,./core/experiments/qa/results/20230831213213,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:34:15,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.3020527859237537,0.4574780058651026,0.6026392961876833,0.39894303853221985,0.3020527859237537,0.17008797653958943,0.1439882697947214,0.22391304347826088,0.3782608695652174,0.533695652173913,./core/experiments/qa/results/20230831213311,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:35:16,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.2287390029325513,0.3343108504398827,0.4809384164222874,0.30493788685452555,0.2287390029325513,0.12463343108504399,0.1158357771260997,0.16956521739130434,0.27717391304347827,0.42934782608695654,./core/experiments/qa/results/20230831213416,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:36:14,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.218475073313783,0.34017595307917886,0.4897360703812317,0.3035920649036721,0.218475073313783,0.12609970674486803,0.11759530791788857,0.16195652173913044,0.28043478260869564,0.4358695652173913,./core/experiments/qa/results/20230831213516,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:37:13,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.2844574780058651,0.4442815249266862,0.6026392961876833,0.3909666286342167,0.2844574780058651,0.1656891495601173,0.1436950146627566,0.2108695652173913,0.3684782608695652,0.532608695652174,./core/experiments/qa/results/20230831213614,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:38:13,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.29765395894428154,0.4501466275659824,0.592375366568915,0.39226666310446007,0.29765395894428154,0.16764418377321602,0.14164222873900292,0.22065217391304348,0.37282608695652175,0.525,./core/experiments/qa/results/20230831213713,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:39:10,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.3181818181818182,0.4838709677419355,0.6173020527859238,0.41528280501953996,0.3181818181818182,0.18377321603128055,0.14780058651026393,0.2358695652173913,0.40869565217391307,0.5478260869565217,./core/experiments/qa/results/20230831213813,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:40:09,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.1436950146627566,0.18475073313782991,0.20527859237536658,0.1677121841692565,0.1436950146627566,0.06207233626588465,0.04164222873900293,0.10652173913043478,0.13804347826086957,0.15434782608695652,./core/experiments/qa/results/20230831213910,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:41:08,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.2903225806451613,0.44574780058651026,0.6026392961876833,0.39037241696476255,0.2903225806451613,0.16471163245356793,0.1436950146627566,0.21521739130434783,0.36630434782608695,0.532608695652174,./core/experiments/qa/results/20230831214009,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:42:08,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.30058651026392963,0.4530791788856305,0.5982404692082112,0.3977287991974078,0.30058651026392963,0.16862170087976538,0.14310850439882697,0.22282608695652173,0.375,0.5304347826086957,./core/experiments/qa/results/20230831214108,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:43:06,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.3020527859237537,0.46187683284457476,0.6085043988269795,0.40139452473260157,0.3020527859237537,0.1705767350928641,0.14457478005865101,0.22391304347826088,0.3793478260869565,0.5358695652173913,./core/experiments/qa/results/20230831214208,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:44:04,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.2756598240469208,0.3782991202346041,0.5161290322580645,0.34909584057366394,0.2756598240469208,0.1490713587487781,0.12727272727272726,0.20434782608695654,0.33152173913043476,0.4717391304347826,./core/experiments/qa/results/20230831214306,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:45:01,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.2991202346041056,0.44868035190615835,0.6011730205278593,0.3923094590582038,0.2991202346041056,0.1656891495601173,0.1439882697947214,0.2217391304347826,0.3684782608695652,0.533695652173913,./core/experiments/qa/results/20230831214404,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:45:59,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.3020527859237537,0.45161290322580644,0.5894428152492669,0.39432485205919476,0.3020527859237537,0.1681329423264907,0.14134897360703813,0.22391304347826088,0.3739130434782609,0.5239130434782608,./core/experiments/qa/results/20230831214501,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:47:04,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.27419354838709675,0.4472140762463343,0.6026392961876833,0.37864470787568455,0.27419354838709675,0.1652003910068426,0.1434017595307918,0.20326086956521738,0.3673913043478261,0.5315217391304348,./core/experiments/qa/results/20230831214559,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:48:03,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.3387096774193548,0.5029325513196481,0.6363636363636364,0.4296098742486569,0.3387096774193548,0.1906158357771261,0.15190615835777127,0.2510869565217391,0.42391304347826086,0.5630434782608695,./core/experiments/qa/results/20230831214704,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 21:49:03,Task: QA with RGCN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.26832844574780057,0.4750733137829912,0.5967741935483871,0.3839300352316384,0.26832844574780057,0.17253176930596287,0.14193548387096774,0.19891304347826086,0.38369565217391305,0.5260869565217391,./core/experiments/qa/results/20230831214803,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 22:44:53,Task: QA with RGAT,100,0.001,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7609970674486803,0.906158357771261,0.9193548387096774,0.7965001870362409,0.7609970674486803,0.3592375366568915,0.2337243401759531,0.5641304347826087,0.7989130434782609,0.866304347826087,./core/experiments/qa/results/20230831215601,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:08:31 22:49:58,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8841642228739003,0.9208211143695014,0.9354838709677419,0.8505574174929011,0.8841642228739003,0.37390029325513197,0.24105571847507332,0.6554347826086957,0.8315217391304348,0.8934782608695652,./core/experiments/qa/results/20230831203206,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 00:35:31,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8812316715542522,0.9208211143695014,0.9237536656891495,0.8450034813671177,0.8812316715542522,0.37438905180840665,0.23900293255131966,0.6532608695652173,0.8326086956521739,0.8858695652173914,./core/experiments/qa/results/20230831224958,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 02:24:32,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8225806451612904,0.9222873900293255,0.9472140762463344,0.8096859857143099,0.8225806451612904,0.3626588465298143,0.2434017595307918,0.6097826086956522,0.8065217391304348,0.9021739130434783,./core/experiments/qa/results/20230901003531,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 04:12:17,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.7903225806451613,0.8929618768328446,0.906158357771261,0.777397938083423,0.7903225806451613,0.3509286412512219,0.23255131964809383,0.5858695652173913,0.7804347826086957,0.8619565217391304,./core/experiments/qa/results/20230901022432,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 06:00:46,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8313782991202346,0.8988269794721407,0.9134897360703812,0.8187894990314345,0.8313782991202346,0.36363636363636365,0.23577712609970675,0.616304347826087,0.808695652173913,0.8739130434782608,./core/experiments/qa/results/20230901041217,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 07:46:04,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6451612903225806,0.8269794721407625,0.8856304985337243,0.7136604111556553,0.6451612903225806,0.31867057673509286,0.21642228739002933,0.4782608695652174,0.7086956521739131,0.8021739130434783,./core/experiments/qa/results/20230901073738,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 07:51:56,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.7697947214076246,0.8870967741935484,0.906158357771261,0.7905157200245173,0.7697947214076246,0.3616813294232649,0.23519061583577713,0.5706521739130435,0.8043478260869565,0.8717391304347826,./core/experiments/qa/results/20230901060046,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 07:53:51,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.5747800586510264,0.8782991202346041,0.906158357771261,0.6994222472170667,0.5747800586510264,0.3362658846529814,0.22727272727272727,0.4260869565217391,0.7478260869565218,0.842391304347826,./core/experiments/qa/results/20230901074604,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 08:01:52,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7023460410557185,0.875366568914956,0.9032258064516129,0.7687711330647103,0.7023460410557185,0.34457478005865105,0.22756598240469209,0.5206521739130435,0.7663043478260869,0.8434782608695652,./core/experiments/qa/results/20230901075351,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 08:09:50,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6392961876832844,0.8005865102639296,0.8504398826979472,0.6767580349558642,0.6392961876832844,0.3142717497556207,0.212316715542522,0.47391304347826085,0.6989130434782609,0.7869565217391304,./core/experiments/qa/results/20230901080152,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 08:17:55,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7390029325513197,0.8797653958944281,0.9134897360703812,0.7520073116847305,0.7390029325513197,0.3514173998044966,0.23313782991202345,0.5478260869565217,0.7815217391304348,0.8641304347826086,./core/experiments/qa/results/20230901080950,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 08:25:47,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7052785923753666,0.8826979472140762,0.9149560117302052,0.7616290362113397,0.7052785923753666,0.3387096774193548,0.22551319648093843,0.5228260869565218,0.7532608695652174,0.8358695652173913,./core/experiments/qa/results/20230901081755,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 08:33:53,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6334310850439883,0.8944281524926686,0.9222873900293255,0.7222629146436704,0.6334310850439883,0.34310850439882695,0.2310850439882698,0.46956521739130436,0.7630434782608696,0.8565217391304348,./core/experiments/qa/results/20230901082547,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 08:41:17,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6466275659824047,0.841642228739003,0.9222873900293255,0.6991740080018479,0.6466275659824047,0.32942326490713586,0.2313782991202346,0.47934782608695653,0.7326086956521739,0.8576086956521739,./core/experiments/qa/results/20230901083353,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 08:49:23,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6319648093841642,0.8548387096774194,0.9046920821114369,0.7212021968162844,0.6319648093841642,0.32746823069403713,0.22111436950146626,0.46847826086956523,0.7282608695652174,0.8195652173913044,./core/experiments/qa/results/20230901084117,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 08:57:14,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6334310850439883,0.8460410557184751,0.8812316715542522,0.7171881614686078,0.6334310850439883,0.32746823069403713,0.21759530791788856,0.46956521739130436,0.7282608695652174,0.8065217391304348,./core/experiments/qa/results/20230901084923,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 09:05:12,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.5747800586510264,0.8181818181818182,0.8695014662756598,0.6621825068426479,0.5747800586510264,0.31378299120234604,0.21348973607038124,0.4260869565217391,0.6978260869565217,0.7913043478260869,./core/experiments/qa/results/20230901085714,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 09:13:27,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6510263929618768,0.8269794721407625,0.8724340175953079,0.7187472438427437,0.6510263929618768,0.3284457478005865,0.2217008797653959,0.4826086956521739,0.7304347826086957,0.8217391304347826,./core/experiments/qa/results/20230901090512,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 09:21:26,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.5073313782991202,0.8357771260997068,0.8782991202346041,0.6357606101180349,0.5073313782991202,0.30596285434995113,0.21348973607038124,0.3760869565217391,0.6804347826086956,0.7913043478260869,./core/experiments/qa/results/20230901091327,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 09:29:29,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.5234604105571847,0.7859237536656891,0.8958944281524927,0.6501180513083216,0.5234604105571847,0.29227761485826004,0.21466275659824047,0.38804347826086955,0.65,0.7956521739130434,./core/experiments/qa/results/20230901092126,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 09:37:28,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6979472140762464,0.8782991202346041,0.9149560117302052,0.7634419274685779,0.6979472140762464,0.3260019550342131,0.22287390029325513,0.5173913043478261,0.725,0.8260869565217391,./core/experiments/qa/results/20230901092929,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 09:45:29,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.7419354838709677,0.9134897360703812,0.9340175953079178,0.7845064012521326,0.7419354838709677,0.3509286412512219,0.2343108504398827,0.55,0.7804347826086957,0.8684782608695653,./core/experiments/qa/results/20230901093728,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 09:53:09,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.6290322580645161,0.8533724340175953,0.9032258064516129,0.7092563017618959,0.6290322580645161,0.31622678396871945,0.21994134897360704,0.46630434782608693,0.7032608695652174,0.8152173913043478,./core/experiments/qa/results/20230901094529,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 10:01:10,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.655425219941349,0.7991202346041055,0.8607038123167156,0.7001525138262358,0.655425219941349,0.3147605083088954,0.2149560117302053,0.48586956521739133,0.7,0.7967391304347826,./core/experiments/qa/results/20230901095309,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 10:03:39,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8299120234604106,0.9222873900293255,0.9252199413489736,0.8261310374213605,0.8299120234604106,0.3709677419354839,0.23870967741935484,0.6152173913043478,0.825,0.8847826086956522,./core/experiments/qa/results/20230901075156,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 10:09:58,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.5703812316715543,0.8181818181818182,0.8709677419354839,0.6707907572984094,0.5703812316715543,0.30547409579667645,0.21114369501466276,0.42282608695652174,0.6793478260869565,0.782608695652174,./core/experiments/qa/results/20230901100110,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 10:18:47,Task: QA with RGAT,20,0.01,16,2,,"RGAT(
+  (layers): ModuleList(
+    (0): RGATConv(1536, 16, heads=1)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGATConv(16, 2, heads=1)
+  )
+)",0.655425219941349,0.8768328445747801,0.906158357771261,0.7332623516393127,0.655425219941349,0.34066471163245354,0.22785923753665688,0.48586956521739133,0.7576086956521739,0.8445652173913043,./core/experiments/qa/results/20230901100958,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 11:51:29,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8079178885630498,0.9105571847507331,0.9178885630498533,0.804790236645077,0.8079178885630498,0.36412512218963833,0.23665689149560118,0.5989130434782609,0.8097826086956522,0.8771739130434782,./core/experiments/qa/results/20230901100339,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 13:33:06,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8064516129032258,0.9046920821114369,0.9149560117302052,0.8114338618370874,0.8064516129032258,0.3670576735092864,0.23665689149560118,0.5978260869565217,0.816304347826087,0.8771739130434782,./core/experiments/qa/results/20230901115129,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 15:16:14,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8152492668621701,0.9134897360703812,0.9208211143695014,0.8098517969485717,0.8152492668621701,0.36901270772238515,0.2378299120234604,0.6043478260869565,0.8206521739130435,0.8815217391304347,./core/experiments/qa/results/20230901133306,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 17:01:29,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8607038123167156,0.9193548387096774,0.9252199413489736,0.8447142992230968,0.8607038123167156,0.3734115347018573,0.23988269794721406,0.6380434782608696,0.8304347826086956,0.8891304347826087,./core/experiments/qa/results/20230901151614,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 18:46:14,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8900293255131965,0.9428152492668622,0.9442815249266863,0.8444998501652693,0.8900293255131965,0.3817204301075269,0.24252199413489736,0.6597826086956522,0.8489130434782609,0.8989130434782608,./core/experiments/qa/results/20230901170129,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 20:29:28,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8812316715542522,0.9134897360703812,0.9149560117302052,0.8234140004667864,0.8812316715542522,0.37194525904203324,0.23812316715542522,0.6532608695652173,0.8271739130434783,0.8826086956521739,./core/experiments/qa/results/20230901184614,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 22:13:36,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8577712609970675,0.9252199413489736,0.9296187683284457,0.8353797188474605,0.8577712609970675,0.37390029325513197,0.23900293255131966,0.6358695652173914,0.8315217391304348,0.8858695652173914,./core/experiments/qa/results/20230901202928,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:01 23:58:02,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.8782991202346041,0.9193548387096774,0.9237536656891495,0.8334711964477359,0.8782991202346041,0.3734115347018573,0.23929618768328445,0.6510869565217391,0.8304347826086956,0.8869565217391304,./core/experiments/qa/results/20230901221336,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:02 01:41:53,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.6730205278592375,0.8548387096774194,0.8856304985337243,0.7214347250743527,0.6730205278592375,0.34995112414467255,0.23049853372434018,0.4989130434782609,0.7782608695652173,0.8543478260869565,./core/experiments/qa/results/20230901235802,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:02 03:24:47,Task: QA with RGCN,20,0.01,16,2,,"RGCN(
+  (layers): ModuleList(
+    (0): RGCNConv(1536, 16, num_relations=193)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): RGCNConv(16, 2, num_relations=193)
+  )
+)",0.7947214076246334,0.8592375366568915,0.9384164222873901,0.802615641526933,0.7947214076246334,0.34066471163245354,0.23929618768328445,0.5891304347826087,0.7576086956521739,0.8869565217391304,./core/experiments/qa/results/20230902014153,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 10:24:43,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.3020527859237537,0.45894428152492667,0.6070381231671554,0.4000106830517859,0.3020527859237537,0.17008797653958943,0.14604105571847506,0.22391304347826088,0.3782608695652174,0.5413043478260869,./core/experiments/qa/results/20230904101901,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 10:30:02,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.17595307917888564,0.48533724340175954,0.6026392961876833,0.3142323801210032,0.17595307917888564,0.1827956989247312,0.1434017595307918,0.13043478260869565,0.40652173913043477,0.5315217391304348,./core/experiments/qa/results/20230904102443,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 10:35:32,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.2375366568914956,0.3460410557184751,0.4838709677419355,0.31116466739276405,0.2375366568914956,0.12903225806451613,0.11700879765395894,0.17608695652173914,0.28695652173913044,0.43369565217391304,./core/experiments/qa/results/20230904103002,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 10:41:09,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.22434017595307917,0.45894428152492667,0.593841642228739,0.34245670603643835,0.22434017595307917,0.17008797653958943,0.14222873900293256,0.16630434782608697,0.3782608695652174,0.5271739130434783,./core/experiments/qa/results/20230904103532,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 10:46:40,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.15102639296187684,0.48240469208211145,0.5879765395894428,0.2992699657475216,0.15102639296187684,0.17546432062561096,0.1404692082111437,0.11195652173913044,0.39021739130434785,0.5206521739130435,./core/experiments/qa/results/20230904104109,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 10:52:14,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.10263929618768329,0.4736070381231672,0.5703812316715543,0.2694484500369797,0.10263929618768329,0.17253176930596287,0.13607038123167156,0.07608695652173914,0.38369565217391305,0.5043478260869565,./core/experiments/qa/results/20230904104640,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 10:57:41,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.24780058651026393,0.4560117302052786,0.6085043988269795,0.3627475818560367,0.24780058651026393,0.16911045943304007,0.14574780058651027,0.18369565217391304,0.3760869565217391,0.5402173913043479,./core/experiments/qa/results/20230904105214,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:03:08,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.30791788856304986,0.4633431085043988,0.6041055718475073,0.40256099433608383,0.30791788856304986,0.17204301075268819,0.14486803519061583,0.22826086956521738,0.3826086956521739,0.5369565217391304,./core/experiments/qa/results/20230904105741,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:08:32,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.218475073313783,0.3313782991202346,0.46774193548387094,0.29593199290422456,0.218475073313783,0.12267839687194526,0.11114369501466276,0.16195652173913044,0.2728260869565217,0.41195652173913044,./core/experiments/qa/results/20230904110308,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:14:00,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.26392961876832843,0.4662756598240469,0.5718475073313783,0.3756451312285383,0.26392961876832843,0.17350928641251223,0.1378299120234604,0.1956521739130435,0.3858695652173913,0.5108695652173914,./core/experiments/qa/results/20230904110832,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:19:28,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.02785923753665689,0.1906158357771261,0.19794721407624633,0.09361557559555245,0.02785923753665689,0.06451612903225806,0.040175953079178886,0.020652173913043477,0.14347826086956522,0.14891304347826087,./core/experiments/qa/results/20230904111400,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:24:45,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.29765395894428154,0.44281524926686217,0.5821114369501467,0.388098608936406,0.29765395894428154,0.1652003910068426,0.13988269794721409,0.22065217391304348,0.3673913043478261,0.5184782608695652,./core/experiments/qa/results/20230904111928,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:29:49,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.1436950146627566,0.18475073313782991,0.20527859237536658,0.1677121841692565,0.1436950146627566,0.06207233626588465,0.04164222873900293,0.10652173913043478,0.13804347826086957,0.15434782608695652,./core/experiments/qa/results/20230904112445,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:34:54,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.24926686217008798,0.44574780058651026,0.5909090909090909,0.36051417576015143,0.24926686217008798,0.16715542521994134,0.14281524926686218,0.18478260869565216,0.3717391304347826,0.5293478260869565,./core/experiments/qa/results/20230904112949,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:40:03,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.19501466275659823,0.4970674486803519,0.6158357771260997,0.3317668007241962,0.19501466275659823,0.18866080156402737,0.14574780058651027,0.14456521739130435,0.41956521739130437,0.5402173913043479,./core/experiments/qa/results/20230904113454,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:45:11,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.1774193548387097,0.48533724340175954,0.6041055718475073,0.31668262395930014,0.1774193548387097,0.17888563049853373,0.14486803519061583,0.13152173913043477,0.3978260869565217,0.5369565217391304,./core/experiments/qa/results/20230904114003,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:50:13,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.22140762463343108,0.34457478005865105,0.48826979472140764,0.3022411962952206,0.22140762463343108,0.1300097751710655,0.11788856304985337,0.1641304347826087,0.2891304347826087,0.4369565217391304,./core/experiments/qa/results/20230904114511,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 11:55:11,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.2829912023460411,0.4809384164222874,0.5879765395894428,0.3932658525586588,0.2829912023460411,0.17546432062561096,0.13988269794721409,0.20978260869565218,0.39021739130434785,0.5184782608695652,./core/experiments/qa/results/20230904115013,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 12:00:12,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.2932551319648094,0.4706744868035191,0.5982404692082112,0.3946960531824076,0.2932551319648094,0.17302052785923755,0.1434017595307918,0.21739130434782608,0.3847826086956522,0.5315217391304348,./core/experiments/qa/results/20230904115511,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:04 12:05:14,Task: QA with GCN,20,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.30058651026392963,0.44574780058651026,0.5835777126099707,0.39050952620577917,0.30058651026392963,0.16617790811339198,0.1404692082111437,0.22282608695652173,0.3695652173913043,0.5206521739130435,./core/experiments/qa/results/20230904120012,./data/source_data_old/VAD_triples.csv,./data/source_data_old/VAD_entities_labels.csv,./data/source_data_old/VAD_properties_labels.csv,./data/graph_embeddings_old
+2023:09:06 16:57:35,Task: MetaQA with GNN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results\20230906165603,./data/MetaQA/source_data/kb.txt,./data/MetaQA/source_data/kb_entities.csv,./data/MetaQA/source_data/kb_properties.txt,./data/MetaQA/graph_embeddings
+2023:09:07 07:38:46,Task: MetaQA with GNN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results\20230907073739,./data/MetaQA/source_data/kb.txt,./data/MetaQA/source_data/kb_entities.csv,./data/MetaQA/source_data/kb_properties.txt,./data/MetaQA/graph_embeddings
+2023:09:07 07:46:15,Task: MetaQA with GNN,5,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results\20230907074529,./data/MetaQA/source_data/kb.txt,./data/MetaQA/source_data/kb_entities.csv,./data/MetaQA/source_data/kb_properties.txt,./data/MetaQA/graph_embeddings
+2023:09:07 07:49:33,Task: MetaQA with GNN,5,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results\20230907074847,./data/MetaQA/source_data/kb.txt,./data/MetaQA/source_data/kb_entities.csv,./data/MetaQA/source_data/kb_properties.txt,./data/MetaQA/graph_embeddings
+2023:09:07 07:55:40,Task: MetaQA with GNN,5,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,./core/experiments/qa/results\20230907075448,./data/MetaQA/source_data/kb.txt,./data/MetaQA/source_data/kb_entities.csv,./data/MetaQA/source_data/kb_properties.txt,./data/MetaQA/graph_embeddings
+2023:09:07 18:09:38,Task: MetaQA with GNN,5,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",1.0,1.0,1.0,0.5,1.0,1.0,0.6,0.3333333333333333,1.0,1.0,./core/experiments/qa/results\20230907180853,./data/MetaQA/source_data/kb.txt,./data/MetaQA/source_data/kb_entities.csv,./data/MetaQA/source_data/kb_properties.txt,./data/MetaQA/graph_embeddings
+2023:09:07 19:07:24,Task: MetaQA with GNN,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.3444755804643715,0.6251000800640513,0.7923338670936749,0.43716406933109914,0.3444755804643715,0.2979717107018949,0.2494995996797438,0.18130102712667895,0.47047669212536214,0.656570977087174,./core/experiments/qa/results\20230907181251,./data/MetaQA/source_data/kb.txt,./data/MetaQA/source_data/kb_entities.csv,./data/MetaQA/source_data/kb_properties.txt,./data/MetaQA/graph_embeddings

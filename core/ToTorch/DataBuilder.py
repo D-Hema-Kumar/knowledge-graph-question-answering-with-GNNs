@@ -15,16 +15,25 @@ class DataBuilder:
         entities_labels_path,
         properties_labels_path,
         embeddings_path,
+        is_vad_kb,
         labeler=None,
+        
     ):
-        self.triples_data = pd.read_csv(triples_path)
-        self.entities_data = pd.read_csv(entities_labels_path)
-        mask = self.entities_data.iloc[:, 1].isna()
-        self.entities_data.loc[mask, "label"] = (
-            self.entities_data[self.entities_data.iloc[:, 1].isna()]
-            .iloc[:, 0]
-            .apply(lambda x: x.split("/")[-1])
-        )  # deal with missing labels
+        self.is_vad_kb = is_vad_kb
+        if is_vad_kb: # if it is VAD KG
+            self.triples_data = pd.read_csv(triples_path,header=None)
+            self.entities_data = pd.read_csv(entities_labels_path)
+            mask = self.entities_data.iloc[:, 1].isna()
+            self.entities_data.loc[mask, "label"] = (
+                self.entities_data[self.entities_data.iloc[:, 1].isna()]
+                .iloc[:, 0]
+                .apply(lambda x: x.split("/")[-1])
+            )  # deal with missing labels
+        
+        else: # MetaQA's triples and entities files come with separate delimiters
+            self.triples_data = pd.read_csv(triples_path, delimiter='|', header=None)
+            self.entities_data = pd.read_csv(entities_labels_path, delimiter='\t')
+
         self.properties_data = pd.read_csv(properties_labels_path)
         self.entities_label_to_embeddings = {}
         loaded_data = np.load(
@@ -72,23 +81,51 @@ class DataBuilder:
         """
         return torch.tensor(list(map(self.labeler, self.entities_data["uri"])))
 
+    def get_edge_attr(self):
+        '''get edge features'''
+        edge_embeddings = np.array(
+            self.properties_data["label"].map(self.properties_label_to_embeddings).to_list()
+        )
+        edge_attr = torch.tensor(edge_embeddings)
+       
+        return edge_attr
+
     def get_edge_type(self):
         """
         Return edge type list.
         """
         property_to_id = {
-            string: index
-            for index, string in enumerate(self.properties_data.iloc[:, 0].to_list())
-        }
+                string: index
+                for index, string in enumerate(self.properties_data.iloc[:, 0].to_list())
+            }
         properties = self.triples_data.iloc[:, 1].map(property_to_id)
-        return torch.tensor(properties, dtype=torch.long)
+        if self.is_vad_kb:
+            return torch.tensor(properties, dtype=torch.long)
+        
+        else: # if dataset is MetaQA, add the inverse relation types because they don't have them in the KB
+
+            inverse_properties = np.array(properties) + len(property_to_id)
+            
+            return torch.tensor(properties.tolist() + inverse_properties.tolist(), dtype=torch.long)
+
+
+        
 
     def get_edge_index(self):
         """
         Return edge index list and edge type list.
         """
-        subjects = self.triples_data.iloc[:, 0].map(self.entity_to_index)
-        objects = self.triples_data.iloc[:, 2].map(self.entity_to_index)
+        if self.is_vad_kb:
+
+            subjects = self.triples_data.iloc[:, 0].map(self.entity_to_index)
+            objects = self.triples_data.iloc[:, 2].map(self.entity_to_index)
+
+        else: #'adding inverse connections for MetaQA'
+            subjects_ = self.triples_data.iloc[:, 0].map(self.entity_to_index).tolist()
+            objects_ = self.triples_data.iloc[:, 2].map(self.entity_to_index).tolist()
+            subjects = subjects_ + objects_
+            objects =  objects_ + subjects_
+
         return torch.stack(
             (
                 torch.tensor(subjects, dtype=torch.long),
@@ -126,104 +163,150 @@ class DataBuilder:
 
 
 class QADataBuilder(DataBuilder):
+    '''This class is for MetaQA and other datasets '''
+
     def __init__(
-        self,
-        triples_path,
-        entities_labels_path,
-        properties_labels_path,
-        embeddings_path,
-        questions_answers_path,
-        questions_embeddings_path,
-        labeler=None,
+    self,
+    triples_path,
+    entities_labels_path,
+    properties_labels_path,
+    embeddings_path,
+    is_vad_kb,
+    training_questions_concepts_answers_file_path,
+    testing_questions_concepts_answers_file_path,
+    training_questions_embeddings_path,
+    testing_questions_embeddings_path,
+    training_subgraphs_file_path,
+    testing_subgraphs_file_path,
+    labeler=None,
     ):
         super().__init__(
             triples_path,
             entities_labels_path,
             properties_labels_path,
             embeddings_path,
+            is_vad_kb,
             labeler,
         )
-        self.question_to_answers = (
-            pd.read_csv(questions_answers_path)
-            .set_index("question")
-            .to_dict()["answer_uri"]
-        )
-        self.questions_to_embeddings = {}
+        self.training_questions_concepts_answers = (
+            pd.read_csv(training_questions_concepts_answers_file_path)
+            )
+        self.testing_questions_concepts_answers = (
+            pd.read_csv(testing_questions_concepts_answers_file_path)
+            )
+        # reads columns as lists instead of strings
+        list_columns = ['concepts', 'answers']
+        for col in list_columns:
+            self.training_questions_concepts_answers[col] = self.training_questions_concepts_answers[col].apply(ast.literal_eval)
+            self.testing_questions_concepts_answers[col] = self.testing_questions_concepts_answers[col].apply(ast.literal_eval)
+        
+        #load training_question embeddings
+        self.training_questions_to_embeddings = {}
         loaded_data = np.load(
-            os.path.join(questions_embeddings_path, "questions.npz"), allow_pickle=True
+        os.path.join(training_questions_embeddings_path, "questions.npz"), allow_pickle=True
         )
         for key in loaded_data.keys():
-            self.questions_to_embeddings[key] = loaded_data[key]
+            self.training_questions_to_embeddings[key] = loaded_data[key]
 
-        def labeler(**kwargs):
-            try:
-                question = kwargs["question"]
-            except:
-                logger.error("You need to call get_y with a question.")
-                raise Exception("You need to call get_y with a question.")
-            return lambda x: 1 if self.question_to_answers[question] == x else 0
-
-        self.labeler = labeler
-
-    def get_node_index_for_question_answer(self, question):
-        """
-        Get the node index of the answer to the given question.
-        """
-        answer = self.question_to_answers[question]
-        return self.entity_to_index[answer]
-
-    def questions_embeddings_masked(self, mask):
-        class DictIterator:
-            def __init__(self, my_dict, mask):
-                self._dict_items = my_dict.items()
-                self._iter = iter(self._dict_items)
-                self._mask = mask
-                self._pos = 0
-
-            def __iter__(self):
-                return self
-
-            def __next__(self):
-                try:
-                    key, value = next(self._iter)
-                    if self._mask[self._pos]:
-                        self._pos += 1
-                        return key, value
-                    else:
-                        self._pos += 1
-                        return self.__next__()
-                except StopIteration:
-                    raise StopIteration
-
-        return DictIterator(self.questions_to_embeddings, mask)
-
-    def get_questions_masks(
-        self, percentage_train=0.7, percentage_val=0.2, percentage_test=0.1
-    ):
-        return self._get_masks(
-            size=len(self.question_to_answers),
-            percentage_train=percentage_train,
-            percentage_val=percentage_val,
-            percentage_test=percentage_test,
+        #load testing_question embeddings
+        self.testing_questions_to_embeddings = {}
+        loaded_data = np.load(
+        os.path.join(testing_questions_embeddings_path, "questions.npz"), allow_pickle=True
         )
+        for key in loaded_data.keys():
+            self.testing_questions_to_embeddings[key] = loaded_data[key]
+        
+        # load training subgraphs
+        self.training_questions_to_subgraphs = {}
+        loaded_data = np.load(training_subgraphs_file_path, allow_pickle=True)
+        for key in loaded_data.keys():
+            self.training_questions_to_subgraphs[key] = loaded_data[key]
+        
+        # load testing subgraphs
+        self.testing_questions_to_subgraphs = {}
+        loaded_data = np.load(testing_subgraphs_file_path, allow_pickle=True)
+        for key in loaded_data.keys():
+            self.testing_questions_to_subgraphs[key] = loaded_data[key]
 
-    def get_mask_for_nodes_for_question(self, question, size):
-        """
-        Return mask for nodes of dimension size.
-        1 True item in the maks corresponds to answer to the given question
-        Remaining (size-1) True items correspond to randomly selected nodes
-        Everything else is False.
-        """
-        answer_node_index = self.get_node_index_for_question_answer(question)
-        available_indices = set(range(len(self.entities_data)))
-        available_indices.remove(answer_node_index)
-        random_nodes = np.random.choice(
-            list(available_indices), size - 1, replace=False
-        )
-        mask = np.zeros(len(self.entities_data), dtype=bool)
-        mask[answer_node_index] = True
-        mask[random_nodes] = True
-        return mask
+        self.x = self.get_x()
+        self.edge_index = self.get_edge_index()
+        self.edge_type = self.get_edge_type()
+
+
+    def build_data(self):
+        self.data = Data(x=self.x,edge_index=self.edge_index, edge_type=self.edge_type)
+        return self.data
+    
+    def get_question_training_x_mask(self, question_subgraph_data,n=18):
+    
+        question_training_mask = torch.zeros_like(question_subgraph_data['question_subgraph_nodes'], dtype=torch.bool)
+
+        question_subgraph_concept_mask = question_subgraph_data['question_subgraph_concept_mask']
+        question_subgraph_answer_mask  = question_subgraph_data['question_subgraph_answer_mask']
+
+        # Exclude question_mask and answer_mask items
+        valid_indices = torch.where(~question_subgraph_concept_mask & ~question_subgraph_answer_mask)[0]
+
+        if n < len(valid_indices):
+            random_indices  = random.sample(valid_indices.tolist(), n)
+            question_training_mask[random_indices] = True
+            question_training_mask = question_training_mask | question_subgraph_answer_mask
+        else:
+            question_training_mask[~question_subgraph_concept_mask] = True
+        
+        return question_training_mask
+    
+    def get_question_data(self, question:str, training=False):#
+
+        if training:
+            question_subgraph_data = self.training_questions_to_subgraphs[question].item()
+                
+            # q_x
+            q_x = torch.cat(
+                (
+                    self.x[question_subgraph_data['question_subgraph_nodes']],
+                    torch.from_numpy(self.training_questions_to_embeddings[question].reshape(1, -1).repeat(self.x[question_subgraph_data['question_subgraph_nodes']].shape[0], axis=0)),
+                ),
+                dim=1,
+            )  # broadcast the question emb to match the x dim
+
+            # q_edge_index
+            q_edge_index =  question_subgraph_data['reindexed_question_subgraph_edge_index']
+
+            # q_edge_type
+            q_edge_type = question_subgraph_data['question_edge_type']
+
+            # q_training_mask
+            q_training_mask = self.get_question_training_x_mask(question_subgraph_data,n=18)
+
+            # q_y
+            q_y = question_subgraph_data['question_y']
+
+            return Data(x=q_x, edge_index=q_edge_index, edge_type=q_edge_type, train_mask=q_training_mask, y=q_y)
+        
+        else:#testing phase
+
+            #load question specific subgraph
+            question_subgraph_data = self.testing_questions_to_subgraphs[question].item() 
+            
+            #q_x
+            q_x = torch.cat(
+                (
+                    self.x[question_subgraph_data['question_subgraph_nodes']],
+                    torch.from_numpy(self.testing_questions_to_embeddings[question].reshape(1, -1).repeat(self.x[question_subgraph_data['question_subgraph_nodes']].shape[0], axis=0)),
+                ),
+                dim=1,
+            )
+
+            # q_edge_index
+            q_edge_index =  question_subgraph_data['reindexed_question_subgraph_edge_index']
+
+            # q_edge_type
+            q_edge_type = question_subgraph_data['question_edge_type'] 
+
+            return Data(x=q_x, edge_index=q_edge_index, edge_type=q_edge_type), question_subgraph_data['question_subgraph_nodes'], question_subgraph_data['question_subgraph_nodes'][question_subgraph_data['question_subgraph_answer_mask']]
+
+
     
     
 
@@ -289,9 +372,11 @@ class QAMaskBuilder(DataBuilder):
     entities_labels_path,
     properties_labels_path,
     embeddings_path,
+    is_vad_kb,
     training_questions_concepts_answers_file_path,
     testing_questions_concepts_answers_file_path,
-    questions_embeddings_path,
+    training_questions_embeddings_path,
+    testing_questions_embeddings_path,
     labeler=None,
     ):
         super().__init__(
@@ -299,6 +384,7 @@ class QAMaskBuilder(DataBuilder):
             entities_labels_path,
             properties_labels_path,
             embeddings_path,
+            is_vad_kb,
             labeler,
         )
         self.training_questions_concepts_answers = (
@@ -313,13 +399,21 @@ class QAMaskBuilder(DataBuilder):
             self.training_questions_concepts_answers[col] = self.training_questions_concepts_answers[col].apply(ast.literal_eval)
             self.testing_questions_concepts_answers[col] = self.testing_questions_concepts_answers[col].apply(ast.literal_eval)
         
-        #load question embeddings
-        self.questions_to_embeddings = {}
+        #load training_question embeddings
+        self.training_questions_to_embeddings = {}
         loaded_data = np.load(
-        os.path.join(questions_embeddings_path, "questions.npz"), allow_pickle=True
+        os.path.join(training_questions_embeddings_path, "questions.npz"), allow_pickle=True
         )
         for key in loaded_data.keys():
-            self.questions_to_embeddings[key] = loaded_data[key]
+            self.training_questions_to_embeddings[key] = loaded_data[key]
+
+        #load testing_question embeddings
+        self.testing_questions_to_embeddings = {}
+        loaded_data = np.load(
+        os.path.join(testing_questions_embeddings_path, "questions.npz"), allow_pickle=True
+        )
+        for key in loaded_data.keys():
+            self.testing_questions_to_embeddings[key] = loaded_data[key]
 
         self.x = self.get_x()
         self.edge_index = self.get_edge_index()
@@ -331,7 +425,7 @@ class QAMaskBuilder(DataBuilder):
         return self.data
 
 
-    def get_concepts_and_masks_for_question(self, question:str, concept_uri:list, answer_uri:list):
+    def get_question_data(self, question:str, concept_uri:list, answer_uri:list, training=False):
         '''
         given a question, q_node, a_node : builds a list of subgraph concepts and its related masks:
         e.g. 
@@ -342,7 +436,7 @@ class QAMaskBuilder(DataBuilder):
 
         # concept and answer nodes
         question_specific_concept_nodes =  torch.tensor(self.get_concepts(concept_uri))
-        question_specific_answer_nodes = torch.tensor(self.get_concepts(answer_uri))
+        self.question_specific_answer_nodes = torch.tensor(self.get_concepts(answer_uri))
 
         # 2 hop neighbors from concept nodes
         mask = torch.isin(self.data.edge_index[0], question_specific_concept_nodes)
@@ -362,7 +456,7 @@ class QAMaskBuilder(DataBuilder):
         question_subgraph_answer_mask = torch.zeros_like(question_subgraph_all_nodes, dtype=torch.bool)
 
         question_subgraph_concept_mask = question_subgraph_concept_mask | torch.isin(question_subgraph_all_nodes , question_specific_concept_nodes)
-        question_subgraph_answer_mask  =  question_subgraph_answer_mask | torch.isin(question_subgraph_all_nodes , question_specific_answer_nodes)
+        question_subgraph_answer_mask  =  question_subgraph_answer_mask | torch.isin(question_subgraph_all_nodes , self.question_specific_answer_nodes)
 
         # Exclude question_mask and answer_mask items
         valid_indices = torch.where(~question_subgraph_concept_mask & ~question_subgraph_answer_mask)[0]
@@ -373,6 +467,44 @@ class QAMaskBuilder(DataBuilder):
             question_subgraph_answer_and_random_nodes_mask = question_subgraph_answer_and_random_nodes_mask | question_subgraph_answer_mask
         else:
             question_subgraph_answer_and_random_nodes_mask[~question_subgraph_concept_mask] = True
+        
+        # subgraph's x
+
+        if training:
+
+            self.q_x = torch.cat(
+                (
+                    self.x[question_subgraph_all_nodes],
+                    torch.from_numpy(self.training_questions_to_embeddings[question].reshape(1, -1).repeat(self.x[question_subgraph_all_nodes].shape[0], axis=0)),
+                ),
+                dim=1,
+            )  # broadcast the question emb to match the x dim
+        else: #testing phase
+            self.q_x = torch.cat(
+                (
+                    self.x[question_subgraph_all_nodes],
+                    torch.from_numpy(self.testing_questions_to_embeddings[question].reshape(1, -1).repeat(self.x[question_subgraph_all_nodes].shape[0], axis=0)),
+                ),
+                dim=1,
+            )  # broadcast the question emb to match the x dim
+
+
+        # subgraph's edge_index
+        self.question_subgraph_all_nodes_to_index = {sub_node : index for index, sub_node in enumerate (question_subgraph_all_nodes.tolist())}
+        self.mapped_q_subgraph_edge_index = torch.tensor(
+                                                [
+                                                [self.question_subgraph_all_nodes_to_index[head.item()] for head in self.edge_index[:,subgraph_mask][0]],
+                                                [self.question_subgraph_all_nodes_to_index[tail.item()] for tail in self.edge_index[:,subgraph_mask][1]]
+                                                ],dtype=torch.long
+                                            )
+        
+        # subgraph's edge_type
+        self.q_edge_type = self.edge_type[subgraph_mask]
+        
+        # subgraph's training and y labels
+        self.q_training_x_mask = question_subgraph_answer_and_random_nodes_mask
+        self.q_y = torch.zeros((len(question_subgraph_all_nodes),), dtype=torch.long)
+        self.q_y[question_subgraph_answer_mask]=1
     
         self.subgraph_mask = subgraph_mask
         self.question_subgraph_all_nodes = question_subgraph_all_nodes
@@ -380,7 +512,10 @@ class QAMaskBuilder(DataBuilder):
         self.question_subgraph_answer_mask = question_subgraph_answer_mask
         self.question_subgraph_answer_and_random_nodes_mask = question_subgraph_answer_and_random_nodes_mask
 
-        return subgraph_mask, question_subgraph_all_nodes, question_subgraph_concept_mask, question_subgraph_answer_mask, question_subgraph_answer_and_random_nodes_mask
+        #return subgraph_mask, question_subgraph_all_nodes, question_subgraph_concept_mask, question_subgraph_answer_mask, question_subgraph_answer_and_random_nodes_mask
+        if training:
+            return Data(x=self.q_x, edge_index=self.mapped_q_subgraph_edge_index, edge_type=self.q_edge_type, train_mask=self.q_training_x_mask, y=self.q_y)
+        return Data(x=self.q_x, edge_index=self.mapped_q_subgraph_edge_index, edge_type=self.q_edge_type)
     
     def get_question_training_mask_for_x(self):
         self.q_training_x_mask = torch.full((self.data.x.size()[0],),False, dtype=torch.bool)
@@ -399,4 +534,95 @@ class QAMaskBuilder(DataBuilder):
                 conceptIds.append(self.entity_to_index[concept])
         return conceptIds
 
+    def get_question_2_hop_subgraph_mask(self,concepts:list): #TODO instead of 2 make it K hop in future
 
+        ''' gets you MASK to apply onf data.edge_index to get all the edges k-hops given concept nodes.'''
+
+        self.question_specific_concept_nodes =  torch.tensor(self.get_concepts(concepts))
+
+        # 2 hop neighbors from concept nodes
+        mask = torch.isin(self.edge_index[0], self.question_specific_concept_nodes)
+        one_hop_neighbors = torch.unique(self.edge_index[1, mask])
+        one_hop_neighbors_with_q_node = torch.unique(
+                                    torch.cat(
+                                        (one_hop_neighbors,self.question_specific_concept_nodes)
+                                        )
+                                    )
+
+        question_2_hop_subgraph_mask = torch.zeros_like(self.edge_index[0], dtype=torch.bool)
+        for node in one_hop_neighbors_with_q_node:
+            question_2_hop_subgraph_mask = question_2_hop_subgraph_mask | (self.edge_index[0]==node)
+        
+        return question_2_hop_subgraph_mask
+    
+    def get_question_subgraph_nodes(self, question_k_hop_subgraph_mask):
+        return torch.unique(self.edge_index[:,question_k_hop_subgraph_mask])
+
+    def get_question_subgraph_concept_mask(self, question_subgraph_nodes:list ):
+
+        question_subgraph_concept_mask = torch.zeros_like(question_subgraph_nodes, dtype=torch.bool)
+        question_subgraph_concept_mask = question_subgraph_concept_mask | torch.isin(question_subgraph_nodes , self.question_specific_concept_nodes)
+        return question_subgraph_concept_mask
+    
+    def get_question_subgraph_answer_mask(self, question_subgraph_nodes:list, answer_uri:list):
+
+        self.question_specific_answer_nodes = torch.tensor(self.get_concepts(answer_uri))
+
+        question_subgraph_answer_mask = torch.zeros_like(question_subgraph_nodes, dtype=torch.bool)
+        question_subgraph_answer_mask  =  question_subgraph_answer_mask | torch.isin(question_subgraph_nodes , self.question_specific_answer_nodes)
+        return question_subgraph_answer_mask
+
+    def get_question_y(self, question_subgraph_nodes, question_subgraph_answer_mask):
+
+        question_y = torch.zeros((len(question_subgraph_nodes),), dtype=torch.long)
+        question_y[question_subgraph_answer_mask]=1
+        return question_y
+
+    def get_reindexed_question_subgraph_edge_index(self, question_subgraph_nodes, question_k_hop_subgraph_mask ):
+
+        question_subgraph_nodes_to_index = {sub_node : index for index, sub_node in enumerate (question_subgraph_nodes.tolist())}
+        reindexed_question_subgraph_edge_index = torch.tensor(
+                                                [
+                                                [question_subgraph_nodes_to_index[head.item()] for head in self.edge_index[:,question_k_hop_subgraph_mask][0]],
+                                                [question_subgraph_nodes_to_index[tail.item()] for tail in self.edge_index[:,question_k_hop_subgraph_mask][1]]
+                                                ],dtype=torch.long
+                                            )
+        return reindexed_question_subgraph_edge_index
+    
+    def get_question_edge_type(self, question_k_hop_subgraph_mask):
+        return self.edge_type[question_k_hop_subgraph_mask]
+    
+    def get_question_subgraph_dict(self, concept_uri:list, answer_uri:list):
+
+        question_2_hop_subgraph_mask = self.get_question_2_hop_subgraph_mask(concept_uri)
+        question_subgraph_nodes = self.get_question_subgraph_nodes(question_2_hop_subgraph_mask)
+        question_subgraph_concept_mask = self.get_question_subgraph_concept_mask(question_subgraph_nodes)
+        question_subgraph_answer_mask = self.get_question_subgraph_answer_mask(question_subgraph_nodes, answer_uri)
+        question_y = self.get_question_y(question_subgraph_nodes, question_subgraph_answer_mask)
+        reindexed_question_subgraph_edge_index = self.get_reindexed_question_subgraph_edge_index(question_subgraph_nodes, question_2_hop_subgraph_mask )
+        
+        return {
+                'question_2_hop_subgraph_mask':question_2_hop_subgraph_mask,
+                'question_subgraph_nodes':question_subgraph_nodes,
+                'question_subgraph_concept_mask':question_subgraph_concept_mask,
+                'question_subgraph_answer_mask':question_subgraph_answer_mask,
+                'question_y':question_y,
+                'reindexed_question_subgraph_edge_index':reindexed_question_subgraph_edge_index
+                }
+    def save_questions_subgraphs(self,questions_concepts_answers_file_path:str,file_name:str):
+
+        questions_concepts_answers = (
+            pd.read_csv(questions_concepts_answers_file_path)
+            )
+        # reads columns as lists instead of strings
+        list_columns = ['concepts', 'answers']
+        for col in list_columns:
+            questions_concepts_answers[col] = questions_concepts_answers[col].apply(ast.literal_eval)
+        
+        questions_subgraphs = {}
+        for _, row in questions_concepts_answers.iterrows():
+            questions_subgraphs[row['question']] = self.get_question_subgraph_dict(concept_uri=row["concepts"]
+                                                                                   ,answer_uri=row["answers"])
+        
+        # Save the dictionary to a NumPy file
+        np.save(file_name+'.npy', questions_subgraphs)

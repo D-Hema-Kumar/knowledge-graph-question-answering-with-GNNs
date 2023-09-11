@@ -26,3 +26,22 @@ GRAPH_EMBEDDINGS_PATH_OLD = "./data/graph_embeddings_old"
 SOURCE_DATA_PATH_OLD = "./data/source_data_old/"
 
 VAD_KGQA_GoldStandard = "./data/source_data_old/OPAL_KGQA_GoldStandard.json"
+
+#MetaQA
+MetaQA_CONFIG = {"KB_PATH":"./data/MetaQA/source_data/kb.txt",
+                "ENTITIES_LABELS_PATH":"./data/MetaQA/source_data/kb_entities.csv",
+                 "PROPERTIES_LABELS_PATH": "./data/MetaQA/source_data/kb_properties.txt",
+                 "GRAPH_EMBEDDINGS_PATH":"./data/MetaQA/graph_embeddings",
+                 "QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH": "data/MetaQA/source_data/one-hop/qca_dev.csv",
+                 "QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH":"./data/MetaQA/question_embeddings/one-hop/dev",
+                 "QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TRAIN_PATH": "data/MetaQA/source_data/one-hop/qca_train.csv",
+                 "QUESTIONS_EMBEDDINGS_1_HOP_TRAIN_PATH":"./data/MetaQA/question_embeddings/one-hop/train",
+                 "QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TEST_PATH": "data/MetaQA/source_data/one-hop/qca_test.csv",
+                 "QUESTIONS_EMBEDDINGS_1_HOP_TEST_PATH":"./data/MetaQA/question_embeddings/one-hop/test",
+                 "QUESTIONS_CONCEPTS_ANSWERS_1_HOP_FOLDER_PATH": "data/MetaQA/source_data/one-hop/",
+                 "SUBGRAPHS_1_HOP_DEV_FILE_PATH":"data/MetaQA/source_data/one-hop/dev_subgraphs.npz",
+                 "SUBGRAPHS_1_HOP_TRAIN_FILE_PATH":"data/MetaQA/source_data/one-hop/train_subgraphs.npz",
+                 "SUBGRAPHS_1_HOP_TEST_FILE_PATH":"data/MetaQA/source_data/one-hop/test_subgraphs.npz",
+                 "QUESTIONS_CONCEPTS_ANSWERS_2_HOP_FOLDER_PATH": "data/MetaQA/source_data/two-hop/",
+                 "QUESTIONS_CONCEPTS_ANSWERS_3_HOP_FOLDER_PATH": "data/MetaQA/source_data/three-hop/"
+                 }

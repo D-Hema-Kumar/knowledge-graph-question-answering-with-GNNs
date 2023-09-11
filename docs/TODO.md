@@ -9,17 +9,26 @@
 - [ ] Simple BinaryClassification with MLP -- Done
 - [ ] Simple BinaryClassification with GCN -- Done
 - [ ] Classify instances and retrieve embedding to give to Jan -- Done
-- [ ] QA simple BinaryClassification and MLP
-- [ ] QA simple BinaryClassification and MLP with masks
-- [ ] QA simple BinaryClassification and GCN -- Done
-- [ ] QA simple BinaryClassification and GCN with masks -- Done
+- [ ] QA using MLP
+- [ ] QA using MLP with masks
+- [ ] QA using GCN -- Done
+- [ ] QA using GCN with masks -- Done
+- [ ] QA using R-GCN with masks -- Done
+- [ ] QA using R-GAT with masks
+- [ ] QA using R-GAT with edge features
+
 
 ## Neural Nets functionality to add
 - [ ] Add edges to Graphs -- Done
 - [ ] Use RGCN -- Done
 - [ ] Make masks depend on subgraph generate and not on random Node selection -- Done
+- [ ] Implement GAT mechanism with edge features
 
 ## Others
 - [ ] Change the Goldstandard to include non "Type" questions -- Done
-- Add more question
-- Get different raondom samples from 
+- Add more questions.
+
+## Optimizations
+
+- [ ] refactor code: To store subgraphs in a file, read and train, might save time while training.
+- [ ] Instead of predicting on all the nodes, predict on only the subgraph nodes.
