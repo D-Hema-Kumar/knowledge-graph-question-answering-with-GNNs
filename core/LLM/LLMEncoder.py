@@ -144,12 +144,16 @@ if __name__ == "__main__":
      )
      '''
     llm_encoder.generate_encodings_for_questions(
-        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TRAIN_PATH"], 
-        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_1_HOP_TRAIN_PATH"]
+        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_2_HOP_DEV_PATH"], 
+        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_2_HOP_DEV_PATH"]
+    )
+    llm_encoder.generate_encodings_for_questions(
+        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TRAIN_PATH"], 
+        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_2_HOP_TRAIN_PATH"]
     )
 
     llm_encoder.generate_encodings_for_questions(
-        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TEST_PATH"], 
-        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_1_HOP_TEST_PATH"]
+        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TEST_PATH"], 
+        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_2_HOP_TEST_PATH"]
     )
 

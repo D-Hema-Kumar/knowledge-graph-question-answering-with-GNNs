@@ -152,22 +152,22 @@ if __name__ == "__main__":
                                 is_vad_kb=False
                                  )
     subgraph_builder.save_questions_subgraphs(
-        questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
-        base_path = MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_1_HOP_FOLDER_PATH"],
+        questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_2_HOP_DEV_PATH'],
+        base_path = MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_2_HOP_FOLDER_PATH"],
         file_name = 'dev_subgraphs'
 
     )
 
     subgraph_builder.save_questions_subgraphs(
-        questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TRAIN_PATH'],
-        base_path = MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_1_HOP_FOLDER_PATH"],
+        questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TRAIN_PATH'],
+        base_path = MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_2_HOP_FOLDER_PATH"],
         file_name = 'train_subgraphs'
 
     )
 
     subgraph_builder.save_questions_subgraphs(
-        questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TEST_PATH'],
-        base_path = MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_1_HOP_FOLDER_PATH"],
+        questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TEST_PATH'],
+        base_path = MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_2_HOP_FOLDER_PATH"],
         file_name = 'test_subgraphs'
 
     )

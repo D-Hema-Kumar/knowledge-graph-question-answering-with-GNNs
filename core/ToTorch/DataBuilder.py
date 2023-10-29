@@ -14,8 +14,9 @@ class DataBuilder:
         triples_path,
         entities_labels_path,
         properties_labels_path,
-        embeddings_path,
         is_vad_kb,
+        LM_embeddings_path=None,
+        KG_embeddings_path=None,
         labeler=None,
         
     ):
@@ -35,19 +36,45 @@ class DataBuilder:
             self.entities_data = pd.read_csv(entities_labels_path, delimiter='\t')
 
         self.properties_data = pd.read_csv(properties_labels_path)
-        self.entities_label_to_embeddings = {}
-        loaded_data = np.load(
-            os.path.join(embeddings_path, "entities.npz"), allow_pickle=True
-        )
-        for key in loaded_data.keys():
-            self.entities_label_to_embeddings[key] = loaded_data[key]
-        self.properties_label_to_embeddings = {}
-        loaded_data = np.load(
-            os.path.join(embeddings_path, "properties.npz"), allow_pickle=True
-        )
-        for key in loaded_data.keys():
-            self.properties_label_to_embeddings[key] = loaded_data[key]
+
+        self.LM_embeddings_path = LM_embeddings_path
+        self.KG_embeddings_path = KG_embeddings_path
+
+        if self.LM_embeddings_path is not None:
+
+            self.entities_lm_embeddings = {}
+            loaded_data = np.load(
+                os.path.join(self.LM_embeddings_path, "entities.npz"), allow_pickle=True
+            )
+            for key in loaded_data.keys():
+                self.entities_lm_embeddings[key] = loaded_data[key] # LM embeddings are based on 'label' column. Keys are labels, values are the embeddings
+            
+            self.properties_label_to_embeddings = {}
+            loaded_data = np.load(
+            os.path.join(LM_embeddings_path, "properties.npz"), allow_pickle=True
+            )
+            for key in loaded_data.keys():
+                self.properties_label_to_embeddings[key] = loaded_data[key]
+
+        if KG_embeddings_path is not None:
+            
+            self.entities_kge_model_embeddings = {}
+            loaded_data = np.load(
+                os.path.join(KG_embeddings_path, "entities.npz"), allow_pickle=True
+            )
+            for key in loaded_data.keys():
+                self.entities_kge_model_embeddings[key] = loaded_data[key] # KGE model embeddings have URI's as Keys and values are the embeddings
+            
+            # Property embeddings are not being used in this system but are READ for future improvements
+            self.properties_label_to_embeddings = {}
+            loaded_data = np.load(
+            os.path.join(KG_embeddings_path, "properties.npz"), allow_pickle=True
+            )
+            for key in loaded_data.keys():
+                self.properties_label_to_embeddings[key] = loaded_data[key]
+
         self.labeler = labeler
+
         self.entity_to_index = {
             entity: index
             for index, entity in enumerate(self.entities_data.iloc[:, 0].to_list())
@@ -61,10 +88,51 @@ class DataBuilder:
         """
         Return node feature vectors, optionally with additional features passed via to_concat.
         """
-        embeddings = np.array(
-            self.entities_data["label"].map(self.entities_label_to_embeddings).to_list()
-        )
-        x = torch.tensor(embeddings)
+
+        if self.LM_embeddings_path is not None and self.KG_embeddings_path is not None:
+            
+            LM_embeddings = np.array(
+            self.entities_data["label"].map(self.entities_lm_embeddings).to_list()
+            )
+
+            if self.is_vad_kb:
+                KGE_model_embeddings = np.array(
+            self.entities_data["uri"].map(self.entities_kge_model_embeddings).to_list()
+            )
+            else:# MetaQA dataset doesn't have URI
+                KGE_model_embeddings = np.array(
+            self.entities_data["label"].map(self.entities_kge_model_embeddings).to_list()
+            )
+
+            x = torch.cat(
+                (
+                torch.tensor(LM_embeddings), torch.tensor(KGE_model_embeddings)
+            ),
+            dim = 1
+            )
+                          
+
+        elif self.LM_embeddings_path is not None:
+            LM_embeddings = np.array(
+            self.entities_data["label"].map(self.entities_lm_embeddings).to_list()
+            )
+            x = torch.tensor(LM_embeddings)
+
+        elif self.KG_embeddings_path is not None:
+
+            if self.is_vad_kb:
+                KGE_model_embeddings = np.array(
+            self.entities_data["uri"].map(self.entities_kge_model_embeddings).to_list()
+            )
+            else:# MetaQA dataset doesn't have URI
+                KGE_model_embeddings = np.array(
+            self.entities_data["label"].map(self.entities_kge_model_embeddings).to_list()
+            )
+            x = torch.tensor(KGE_model_embeddings)
+            
+        else:
+            raise ValueError("No embeddings provided.") # Scope for improvement: if no embeddings given, then initiate randomly
+
         if to_concat is None:
             return x
         return torch.cat(
@@ -170,8 +238,9 @@ class QADataBuilder(DataBuilder):
     triples_path,
     entities_labels_path,
     properties_labels_path,
-    embeddings_path,
     is_vad_kb,
+    LM_embeddings_path,
+    KG_embeddings_path,
     training_questions_concepts_answers_file_path,
     testing_questions_concepts_answers_file_path,
     training_questions_embeddings_path,
@@ -180,13 +249,15 @@ class QADataBuilder(DataBuilder):
     testing_subgraphs_file_path,
     labeler=None,
     ):
+        
         super().__init__(
-            triples_path,
-            entities_labels_path,
-            properties_labels_path,
-            embeddings_path,
-            is_vad_kb,
-            labeler,
+            triples_path=triples_path,
+            entities_labels_path=entities_labels_path,
+            properties_labels_path=properties_labels_path,
+            is_vad_kb=is_vad_kb,
+            LM_embeddings_path=LM_embeddings_path,
+            KG_embeddings_path=KG_embeddings_path,
+            labeler=labeler,
         )
         self.training_questions_concepts_answers = (
             pd.read_csv(training_questions_concepts_answers_file_path)
@@ -371,8 +442,9 @@ class QAMaskBuilder(DataBuilder):
     triples_path,
     entities_labels_path,
     properties_labels_path,
-    embeddings_path,
     is_vad_kb,
+    LM_embeddings_path,
+    KG_embeddings_path,
     training_questions_concepts_answers_file_path,
     testing_questions_concepts_answers_file_path,
     training_questions_embeddings_path,
@@ -380,12 +452,13 @@ class QAMaskBuilder(DataBuilder):
     labeler=None,
     ):
         super().__init__(
-            triples_path,
-            entities_labels_path,
-            properties_labels_path,
-            embeddings_path,
-            is_vad_kb,
-            labeler,
+            triples_path=triples_path,
+            entities_labels_path=entities_labels_path,
+            properties_labels_path=properties_labels_path,
+            is_vad_kb=is_vad_kb,
+            LM_embeddings_path=LM_embeddings_path,
+            KG_embeddings_path=KG_embeddings_path,
+            labeler=labeler,
         )
         self.training_questions_concepts_answers = (
             pd.read_csv(training_questions_concepts_answers_file_path)
@@ -471,7 +544,8 @@ class QAMaskBuilder(DataBuilder):
         # subgraph's x
 
         if training:
-
+            #print('*** Shape of X:',self.x[question_subgraph_all_nodes].shape)
+            #print('*** Shape of Q:',torch.from_numpy(self.training_questions_to_embeddings[question].reshape(1, -1).repeat(self.x[question_subgraph_all_nodes].shape[0], axis=0)).shape)
             self.q_x = torch.cat(
                 (
                     self.x[question_subgraph_all_nodes],

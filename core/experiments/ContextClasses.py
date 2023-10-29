@@ -6,12 +6,15 @@ class DataContext(object):
     def __init__(self, triples_path:str,
                  entities_labels_path:str,
                  properties_labels_path:str,
-                 graph_embeddings_path:str):
+                 LM_embeddings_path:str,
+                 KG_embeddings_path:str
+                 ):
         
         self.triples_path = triples_path
         self.entities_labels_path = entities_labels_path
         self.properties_labels_path = properties_labels_path
-        self.graph_embeddings_path = graph_embeddings_path
+        self.LM_embeddings_path = LM_embeddings_path
+        self.KG_embeddings_path = KG_embeddings_path
 
 
                  
@@ -43,11 +46,12 @@ class QADataContext(DataContext):
         triples_path,
         entities_labels_path,
         properties_labels_path,
-        graph_embeddings_path,
         training_questions_concepts_answers_file_path,
         testing_questions_concepts_answers_file_path,
         training_questions_embeddings_path,
         testing_questions_embeddings_path,
+        LM_embeddings_path,
+        KG_embeddings_path,
         training_subgraphs_file_path= None,
         testing_subgraphs_file_path=None,
         is_vad_kb=True
@@ -57,7 +61,8 @@ class QADataContext(DataContext):
                          triples_path,
                          entities_labels_path,
                          properties_labels_path,
-                         graph_embeddings_path
+                         LM_embeddings_path,
+                         KG_embeddings_path
                 )
         self.training_questions_concepts_answers_file_path = training_questions_concepts_answers_file_path
         self.testing_questions_concepts_answers_file_path = testing_questions_concepts_answers_file_path

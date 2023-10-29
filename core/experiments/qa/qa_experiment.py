@@ -29,7 +29,8 @@ class QAExperiment:
                                         triples_path=data_context.triples_path,
                                         entities_labels_path=data_context.entities_labels_path,
                                         properties_labels_path=data_context.properties_labels_path,
-                                        embeddings_path=data_context.graph_embeddings_path,
+                                        LM_embeddings_path=data_context.LM_embeddings_path,
+                                        KG_embeddings_path=data_context.KG_embeddings_path,
                                         training_questions_concepts_answers_file_path = data_context.training_questions_concepts_answers_file_path,
                                         testing_questions_concepts_answers_file_path = data_context.testing_questions_concepts_answers_file_path,
                                         training_questions_embeddings_path = data_context.training_questions_embeddings_path,
@@ -57,14 +58,14 @@ class QAExperiment:
 
         if self.model_type.__name__ == 'GCN':
             self.model = self.model_type(
-                num_node_features=self.data.num_node_features*2,
+                num_node_features=self.data.num_node_features+768,
                 dim_hidden_layer=self.training_context.dim_hidden_layer,
                 num_layers=self.training_context.num_layers,
                 num_classes=2,
             )
         elif self.model_type.__name__ == 'RGCN':
             self.model = self.model_type(
-                num_node_features=self.data.num_node_features*2,
+                num_node_features=self.data.num_node_features+768,
                 dim_hidden_layer=self.training_context.dim_hidden_layer,
                 num_relations=len(set(self.data.edge_type.tolist())),
                 num_bases = self.training_context.num_bases,
@@ -73,7 +74,7 @@ class QAExperiment:
             )
         elif self.model_type.__name__ == 'RGAT':
             self.model = self.model_type(
-                num_node_features=self.data.num_node_features*2,
+                num_node_features=self.data.num_node_features+768,
                 dim_hidden_layer=self.training_context.dim_hidden_layer,
                 num_relations=len(set(self.data.edge_type.tolist())),
                 num_bases = self.training_context.num_bases,
@@ -87,14 +88,14 @@ class QAExperiment:
 
         if self.model_type.__name__ == 'GCN':
             self.model = self.model_type(
-                num_node_features=self.data.num_node_features*2,
+                num_node_features=self.data.num_node_features+768,
                 dim_hidden_layer=self.training_context.dim_hidden_layer,
                 num_layers=self.training_context.num_layers,
                 num_classes=2,
             )
         elif self.model_type.__name__ == 'RGCN':
             self.model = self.model_type(
-                num_node_features=self.data.num_node_features*2,
+                num_node_features=self.data.num_node_features+768,
                 dim_hidden_layer=self.training_context.dim_hidden_layer,
                 num_relations=len(set(self.data.edge_type.tolist())),
                 num_bases = self.training_context.num_bases,
@@ -103,7 +104,7 @@ class QAExperiment:
             )
         elif self.model_type.__name__ == 'RGAT':
             self.model = self.model_type(
-                num_node_features=self.data.num_node_features*2,
+                num_node_features=self.data.num_node_features+768,
                 dim_hidden_layer=self.training_context.dim_hidden_layer,
                 num_relations=len(set(self.data.edge_type.tolist())),
                 num_bases = self.training_context.num_bases,
@@ -192,9 +193,10 @@ class QAExperiment:
 
         # Define the CSV field names for training context and evaluation results
         fieldnames = ["time_stamp","info","Epochs", "Learning Rate", "hidden_dimension","num_layers","num_bases", "Model",
-                      "hits@1", "hits@3", "hits@5", "mrr", "precision@1", "precision@3" ,"precision@5", "recall@1", 
-                      "recall@3", "recall@5","model_directory","triples_path","entities_labels_path",
-                    "properties_labels_path","graph_embeddings_path"]
+                      "F1","precision","recall","hits@1", "hits@3", "hits@5", "mrr", 
+                      "precision@1", "precision@3" ,"precision@5", "recall@1", "recall@3", "recall@5",
+                      "model_directory","triples_path","entities_labels_path","properties_labels_path",
+                      "LM_embeddings_path", "KG_embeddings_path"]
         
         file_path = os.path.join(EXPERIMENT_TYPES_PATH["qa"], "qa_experiments_masterdata.csv")
         
@@ -207,7 +209,9 @@ class QAExperiment:
             "triples_path" : self.data_context.triples_path,
             "entities_labels_path" : self.data_context.entities_labels_path,
             "properties_labels_path" : self.data_context.properties_labels_path,
-            "graph_embeddings_path" : self.data_context.graph_embeddings_path,
+            "LM_embeddings_path" : self.data_context.LM_embeddings_path,
+            "KG_embeddings_path" : self.data_context.KG_embeddings_path,
+
 
             # training context
             "Epochs": self.training_context.num_epochs,
@@ -220,10 +224,14 @@ class QAExperiment:
             "model_directory":self.experiment_results_folder_path,
 
             # QA evaluation results
+            "F1": self.F1,
+            "precision": self.precision_score ,
+            "recall": self.recall_score,
             "hits@1": self.hits_1,
             "hits@3": self.hits_3,
             "hits@5": self.hits_5,
             "mrr":self.mrr,
+
             "precision@1": self.precision_1,
             "precision@3": self.precision_3,
             "precision@5": self.precision_5,
@@ -256,7 +264,10 @@ class QAExperiment:
 
         evaluation_metrcis = QAEvaluationMetrcis(self.experiment_results_folder_path)
         self.hits_1, self.hits_3, self.hits_5, self.mrr, self.precision_1, self.precision_3 ,self.precision_5, self.recall_1, self.recall_3, self.recall_5 = evaluation_metrcis.run_evaluation()
-        logger.info(f'hits@1 : {np.round(self.hits_1,2)} -- hits@3 : {np.round(self.hits_3,2)} -- hits@5 : {np.round(self.hits_5,2)} -- MRR : {np.round(self.mrr,2)}')
+        self.F1 = evaluation_metrcis.f1	
+        self.precision_score = evaluation_metrcis.precision
+        self.recall_score = evaluation_metrcis.recall	
+        logger.info(f'F-score : {np.round(self.F1,2)} -- hits@1 : {np.round(self.hits_1,2)} -- hits@3 : {np.round(self.hits_3,2)} -- hits@5 : {np.round(self.hits_5,2)} -- MRR : {np.round(self.mrr,2)}')
     
 
     def run(self):
@@ -277,12 +288,13 @@ class MetaQAExperiment(QAExperiment):
         self.experiment_results_folder_path = os.path.join(
             EXPERIMENT_RESULTS_PATH["qa"],
             datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
-
+        #print('KG Embedding path inside MetaQAExperiment class -- :',data_context.KG_embeddings_path)
         self.qa_data_builder = QADataBuilder(
                                         triples_path=data_context.triples_path,
                                         entities_labels_path=data_context.entities_labels_path,
                                         properties_labels_path=data_context.properties_labels_path,
-                                        embeddings_path=data_context.graph_embeddings_path,
+                                        LM_embeddings_path=data_context.LM_embeddings_path,
+                                        KG_embeddings_path=data_context.KG_embeddings_path,
                                         training_questions_concepts_answers_file_path = data_context.training_questions_concepts_answers_file_path,
                                         testing_questions_concepts_answers_file_path = data_context.testing_questions_concepts_answers_file_path,
                                         training_questions_embeddings_path = data_context.training_questions_embeddings_path,
@@ -299,6 +311,8 @@ class MetaQAExperiment(QAExperiment):
 
     def train(self):
         logger.info("Training")
+        
+        self.model = self.model.to(self.device)
 
         optimizer = torch.optim.Adam(
             self.model.parameters(),
@@ -342,13 +356,11 @@ class MetaQAExperiment(QAExperiment):
                 sorted_probability_indices = torch.argsort(predicted_answer_node_probabilities, descending= True)
                 count_predicted_nodes =len(predicted_answer_nodes)
 
-                if count_predicted_nodes > 0 and count_predicted_nodes < 50:
+                if count_predicted_nodes > 0:
                     #logger.debug(f"answers predicted")
                     is_predicted_in_actual_answers = bool(set(question_subgraph_answer) & set(predicted_answer_nodes[sorted_probability_indices].tolist()))
                     res.append((row["question"], question_subgraph_answer, predicted_answer_nodes[sorted_probability_indices].tolist(),predicted_answer_node_probabilities[sorted_probability_indices].tolist(),count_predicted_nodes,is_predicted_in_actual_answers))
                 
-                elif count_predicted_nodes >= 50:
-                    res.append((row["question"], question_subgraph_answer, np.nan,np.nan,count_predicted_nodes,False))
                 else:
                     #logger.debug(f"NO answers found")
                     res.append((row["question"], question_subgraph_answer, np.nan,np.nan,0,False))
@@ -362,9 +374,10 @@ class MetaQAExperiment(QAExperiment):
 
         # Define the CSV field names for training context and evaluation results
         fieldnames = ["time_stamp","info","Epochs", "Learning Rate", "hidden_dimension","num_layers","num_bases", "Model",
-                      "hits@1","F1", "hits@3", "hits@5", "mrr", "precision@1", "precision@3" ,"precision@5", "recall@1", 
-                      "recall@3", "recall@5","model_directory","triples_path","entities_labels_path",
-                    "properties_labels_path","graph_embeddings_path","training_questions_concepts_answers_file_path",
+                      "F1","precision","recall","hits@1", "hits@3", "hits@5", "mrr", 
+                      "precision@1", "precision@3" ,"precision@5", "recall@1", "recall@3", "recall@5"
+                      ,"model_directory","triples_path","entities_labels_path", "properties_labels_path",
+                      "LM_embeddings_path", "KG_embeddings_path","training_questions_concepts_answers_file_path",
                     "testing_questions_concepts_answers_file_path"]
         
         file_path = os.path.join(EXPERIMENT_TYPES_PATH["qa"], "MetaQA_experiments_masterdata.csv")
@@ -378,7 +391,8 @@ class MetaQAExperiment(QAExperiment):
             "triples_path" : self.data_context.triples_path,
             "entities_labels_path" : self.data_context.entities_labels_path,
             "properties_labels_path" : self.data_context.properties_labels_path,
-            "graph_embeddings_path" : self.data_context.graph_embeddings_path,
+            "LM_embeddings_path" : self.data_context.LM_embeddings_path,
+            "KG_embeddings_path" : self.data_context.KG_embeddings_path,
             "training_questions_concepts_answers_file_path":self.data_context.training_questions_concepts_answers_file_path,
             "testing_questions_concepts_answers_file_path":self.data_context.testing_questions_concepts_answers_file_path,
 
@@ -393,17 +407,23 @@ class MetaQAExperiment(QAExperiment):
             "model_directory":self.experiment_results_folder_path,
 
             # QA evaluation results
-            "hits@1": self.hits_1,
+
             "F1": self.F1,
+            "hits@1": self.hits_1,
             "hits@3": self.hits_3,
             "hits@5": self.hits_5,
             "mrr":self.mrr,
+
             "precision@1": self.precision_1,
             "precision@3": self.precision_3,
             "precision@5": self.precision_5,
             "recall@1": self.recall_1, 
             "recall@3": self.recall_3,
-            "recall@5": self.recall_5
+            "recall@5": self.recall_5,
+
+            "precision": self.precision_score ,
+            "recall": self.recall_score
+
             }
 
         # Check if the file exists to decide whether to write headers or not
@@ -431,6 +451,8 @@ class MetaQAExperiment(QAExperiment):
         evaluation_metrcis = QAEvaluationMetrcis(self.experiment_results_folder_path)
         self.hits_1, self.hits_3, self.hits_5, self.mrr, self.precision_1, self.precision_3 ,self.precision_5, self.recall_1, self.recall_3, self.recall_5 = evaluation_metrcis.run_evaluation()
         self.F1 = evaluation_metrcis.f1	
+        self.precision_score = evaluation_metrcis.precision
+        self.recall_score = evaluation_metrcis.recall	
         logger.info(f'F1 : {np.round(self.F1,2)} -- hits@1 : {np.round(self.hits_1,2)} -- hits@3 : {np.round(self.hits_3,2)} -- hits@5 : {np.round(self.hits_5,2)} -- MRR : {np.round(self.mrr,2)}')
 
 

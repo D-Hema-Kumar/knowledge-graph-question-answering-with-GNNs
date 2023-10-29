@@ -178,6 +178,51 @@ def evaluate_qa_model(trained_model_path, qa_data_builder, model_name):
     eval_res.to_csv(os.path.join(trained_model_path,"evaluation_results.csv"),index=False)
     logger.info("Evaluation results saved.")
 
+def evaluate_MetaQA_model(trained_model_path, qa_data_builder, model_name):
+
+    device = get_device()
+    #data = qa_data_builder.build_data()
+    logger.info("Loading model.")
+    trained_model = load_model(os.path.join(trained_model_path,model_name))
+    logger.info("Evaluating model.")
+    trained_model.eval()
+
+    with torch.no_grad():
+        res = []
+        for idx, row in tqdm(qa_data_builder.testing_questions_concepts_answers.iterrows()):
+
+            q_data, question_subgraph_nodes,question_subgraph_answer = qa_data_builder.get_question_data(question=row["question"], training=False)
+            q_data = q_data.to(device)
+            question_subgraph_nodes = question_subgraph_nodes.to(device)
+            question_subgraph_answer = question_subgraph_answer.to(device).tolist()
+            #predict
+            out,_ = trained_model(q_data)
+
+            predicted_local_answer_nodes = torch.where(out.argmax(dim=1))[0] # local subgraph answer
+            predicted_answer_nodes = question_subgraph_nodes[predicted_local_answer_nodes] # remapping local answer to global node number
+            predicted_answer_node_probabilities = out.max(dim=1)[0][predicted_local_answer_nodes]
+            sorted_probability_indices = torch.argsort(predicted_answer_node_probabilities, descending= True)
+            count_predicted_nodes =len(predicted_answer_nodes)
+
+            if count_predicted_nodes > 0:
+                #logger.debug(f"answers predicted")
+                is_predicted_in_actual_answers = bool(set(question_subgraph_answer) & set(predicted_answer_nodes[sorted_probability_indices].tolist()))
+                res.append((row["question"], question_subgraph_answer, predicted_answer_nodes[sorted_probability_indices].tolist(),predicted_answer_node_probabilities[sorted_probability_indices].tolist(),count_predicted_nodes,is_predicted_in_actual_answers))
+            
+            else:
+                #logger.debug(f"NO answers found")
+                res.append((row["question"], question_subgraph_answer, np.nan,np.nan,0,False))
+            
+            #break;
+    eval_res = pd.DataFrame.from_records(res,columns=["question","actual_answer_nodes","predicted_answer_nodes","probabilities_of_answer_nodes","count_predicted_nodes","is_predicted_in_actual"])
+    eval_res.to_csv(os.path.join(trained_model_path,"evaluation_results.csv"),index=False)
+    logger.info("Evaluation results saved.")
+
+    evaluation_metrcis = QAEvaluationMetrcis(trained_model_path)
+    hits_1, hits_3, hits_5, mrr, precision_1, precision_3 ,precision_5, recall_1, recall_3,recall_5 = evaluation_metrcis.run_evaluation()
+    F1 = evaluation_metrcis.f1	
+    logger.info(f'F1 : {np.round(F1,2)} -- hits@1 : {np.round(hits_1,2)} -- hits@3 : {np.round(hits_3,2)} -- hits@5 : {np.round(hits_5,2)} -- MRR : {np.round(mrr,2)}')
+
 
 class QAEvaluationMetrcis:
     def __init__(self,model_prediction_path:str):
@@ -224,6 +269,35 @@ class QAEvaluationMetrcis:
             total_actual += len(actual_node)
         return correct_predictions / total_actual
     
+    def precision_score(self,predictions, ground_truths):
+
+        precision_scores = []
+        for pred, truths in zip(predictions, ground_truths):
+            if len(pred)==0:
+                precision = 0.0
+                
+            else:
+                precision = len(set(pred) & set(truths)) / len(pred)
+                
+            precision_scores.append(precision)
+
+        return sum(precision_scores) / len(predictions)
+    
+    def recall_score(self,predictions, ground_truths):
+
+        recall_scores = []
+
+        for pred, truths in zip(predictions, ground_truths):
+            if len(pred)==0:
+                recall = 0.0
+                
+            else:
+                recall = len(set(pred) & set(truths)) / len(truths)
+                
+            recall_scores.append(recall)
+
+        return sum(recall_scores) / len(predictions)
+    
     def f1_score(self,predictions, ground_truths):
 
         f1_scores = []
@@ -248,14 +322,18 @@ class QAEvaluationMetrcis:
         self.hits_3 = self.hits_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=3)
         self.hits_5 = self.hits_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=5)
         self.mrr = self.reciprocal_rank(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'])
+
         self.recall_1 = self.recall_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=1)
         self.recall_3 = self.recall_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=3)
         self.recall_5 = self.recall_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=5)
         self.precision_1 = self.precision_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=1)
         self.precision_3 = self.precision_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=3)
         self.precision_5 = self.precision_at_k(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'], k=5)
+
         self.f1 = self.f1_score(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'])
-                
+        self.recall = self.recall_score(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'])
+        self.precision = self.precision_score(self.evaluation_results['predicted_answer_nodes'], self.evaluation_results['actual_answer_nodes'])
+               
         return self.hits_1, self.hits_3, self.hits_5, self.mrr, self.precision_1, self.precision_3 ,self.precision_5, self.recall_1, self.recall_3, self.recall_5
 
 

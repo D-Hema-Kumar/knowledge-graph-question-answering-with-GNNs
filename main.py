@@ -14,6 +14,7 @@ from config.config import (
     ENTITIES_LABELS_PATH,
     PROPERTIES_LABELS_PATH,
     GRAPH_EMBEDDINGS_PATH,
+    KG_EMBEDDINGS_PATH
 )
 
 from config.config import (
@@ -27,7 +28,8 @@ from config.config import (
     QUESTIONS_EMBEDDINGS_PATH,
     QA_TRAINING_FILE_PATH,
     QA_TESTING_FILE_PATH,
-    MetaQA_CONFIG
+    MetaQA_CONFIG,
+    MetaQA_KG_EMBEDDINGS_PATH
 )
 from core.NeuralNet.MLP import MLP
 from core.NeuralNet.GNN import GCN, RGCN, RGAT
@@ -36,6 +38,9 @@ import sys
 
 logger.remove()
 logger.add(sys.stderr, level="INFO")
+
+GNN_MODELS = [GCN,RGCN, RGAT]
+kg_embedding_models = KG_EMBEDDINGS_PATH.keys()
 
 # Binary Classification Experiment
 '''
@@ -161,7 +166,9 @@ save_experiment_results_to_file(file_name = "experiments.csv",
                                 )
 '''
 
-# QA VAD experiments
+# QA on VAD Experiments
+
+#1 Hypothesis 1 -- Embeddings with LLM
 '''
 training_context = TrainingContext(info = "Task: QA with GNN",
                                    num_epochs = 20,
@@ -189,8 +196,135 @@ for i in range(20):
     qa_experiment.run() 
 
 '''
-# QA MetaQA Experiments
+#2 Hypothesis 2 -- Embeddings with KGE Models
+'''
+training_context = TrainingContext(info = "Task: QA with GCN; node embeddings initialized with complex",
+                                   num_epochs = 20,
+                                   learning_rate = 0.01,
+                                   num_layers=2,
+                                   dim_hidden_layer = 16,
+                                   num_bases= None
+                                    )
 
+data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
+                           entities_labels_path = ENTITIES_LABELS_PATH_OLD,
+                           properties_labels_path = PROPERTIES_LABELS_PATH_OLD,
+                           LM_embeddings_path = None,
+                           KG_embeddings_path = KG_EMBEDDINGS_PATH['complex'],
+                           training_questions_concepts_answers_file_path=QA_TRAINING_FILE_PATH,
+                           testing_questions_concepts_answers_file_path=QA_TESTING_FILE_PATH,
+                           training_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH,
+                           testing_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH)
+
+
+qa_experiment = QAExperiment(
+    training_context=training_context,
+    data_context=data_context,
+    model_type=GCN
+)
+# TRAIN, SAVE & EVAL
+qa_experiment.run() 
+'''
+
+'''
+for gnn_model in GNN_MODELS:
+    for kg_model  in KG_EMBEDDINGS_PATH.keys():
+        
+        training_context = TrainingContext(info = f"Task: QA with {gnn_model.__name__}; node embeddings initialized with {kg_model}",
+                                    num_epochs = 20,
+                                    learning_rate = 0.01,
+                                    num_layers=2,
+                                    dim_hidden_layer = 16,
+                                    num_bases= None
+                                    )
+
+        data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
+                            entities_labels_path = ENTITIES_LABELS_PATH_OLD,
+                            properties_labels_path = PROPERTIES_LABELS_PATH_OLD,
+                            LM_embeddings_path = None,
+                            KG_embeddings_path = KG_EMBEDDINGS_PATH[kg_model],
+                            training_questions_concepts_answers_file_path=QA_TRAINING_FILE_PATH,
+                            testing_questions_concepts_answers_file_path=QA_TESTING_FILE_PATH,
+                            training_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH,
+                            testing_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH)
+
+
+        qa_experiment = QAExperiment(
+                        training_context=training_context,
+                        data_context=data_context,
+                        model_type=gnn_model
+                    )
+
+        # TRAIN, SAVE & EVAL
+        qa_experiment.run() 
+'''
+#3 Hypothesis 3 -- Embeddings with LM + KGE Models
+'''
+training_context = TrainingContext(info = "Task: QA with GCN; node embeddings initialized with RoBERTa+DistMult",
+                                   num_epochs = 20,
+                                   learning_rate = 0.01,
+                                   num_layers=2,
+                                   dim_hidden_layer = 16,
+                                   num_bases= None
+                                    )
+
+data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
+                           entities_labels_path = ENTITIES_LABELS_PATH_OLD,
+                           properties_labels_path = PROPERTIES_LABELS_PATH_OLD,
+                           LM_embeddings_path = GRAPH_EMBEDDINGS_PATH_OLD,
+                           KG_embeddings_path = KG_EMBEDDINGS_PATH['distmult'],
+                           training_questions_concepts_answers_file_path=QA_TRAINING_FILE_PATH,
+                           testing_questions_concepts_answers_file_path=QA_TESTING_FILE_PATH,
+                           training_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH,
+                           testing_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH)
+
+
+qa_experiment = QAExperiment(
+    training_context=training_context,
+    data_context=data_context,
+    model_type=GCN
+)
+# TRAIN, SAVE & EVAL
+qa_experiment.run() 
+
+'''
+
+'''
+for gnn_model in GNN_MODELS:
+    for kg_model  in KG_EMBEDDINGS_PATH.keys():
+        
+
+        training_context = TrainingContext(info = f"Task: QA with {gnn_model.__name__}; node embeddings initialized with {kg_model}+RoBERTa",
+                                   num_epochs = 20,
+                                   learning_rate = 0.01,
+                                   num_layers=2,
+                                   dim_hidden_layer = 16,
+                                   num_bases= None
+                                    )
+
+        data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
+                           entities_labels_path = ENTITIES_LABELS_PATH_OLD,
+                           properties_labels_path = PROPERTIES_LABELS_PATH_OLD,
+                           LM_embeddings_path = GRAPH_EMBEDDINGS_PATH_OLD,
+                           KG_embeddings_path = KG_EMBEDDINGS_PATH[kg_model],
+                           training_questions_concepts_answers_file_path=QA_TRAINING_FILE_PATH,
+                           testing_questions_concepts_answers_file_path=QA_TESTING_FILE_PATH,
+                           training_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH,
+                           testing_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH)
+
+
+        qa_experiment = QAExperiment(
+                        training_context=training_context,
+                        data_context=data_context,
+                        model_type=gnn_model
+                    )
+        
+        # TRAIN, SAVE & EVAL
+        qa_experiment.run() 
+
+'''
+# QA MetaQA Experiments
+'''
 training_context = TrainingContext(info = "Task: MetaQA with GNN",
                                    num_epochs = 2,
                                    learning_rate = 0.01,
@@ -219,5 +353,81 @@ qa_experiment = MetaQAExperiment(
     )
 # TRAIN, SAVE & EVAL
 qa_experiment.run()
+'''
+
+# Hypothesis 2 MetaQA with only KGE embeddings
 
 
+
+for gnn_model in GNN_MODELS:
+    for kge_model in [k for k in MetaQA_KG_EMBEDDINGS_PATH.keys() if k != 'roberta']:
+        
+        training_context = TrainingContext(info = f"Task: 1-hop MetaQA with {gnn_model.__name__}; node embeddings initialized with {kge_model}",
+                                        num_epochs = 2,
+                                        learning_rate = 0.01,
+                                        num_layers=2,
+                                        dim_hidden_layer = 16,
+                                        num_bases= None
+                                            )
+
+        data_context = QADataContext(   triples_path=MetaQA_CONFIG['KB_PATH'],
+                                        entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
+                                        properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
+                                        KG_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH[kge_model],
+                                        LM_embeddings_path=None,
+                                        training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TRAIN_PATH'],
+                                        testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TEST_PATH'],
+                                        training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_TRAIN_PATH'],
+                                        testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_TEST_PATH'],
+                                        training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_TRAIN_FILE_PATH'],
+                                        testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_TEST_FILE_PATH'],
+                                        is_vad_kb=False
+                                    )
+
+        qa_experiment = MetaQAExperiment(
+                training_context=training_context,
+                data_context=data_context,
+                model_type=gnn_model
+            )
+        # TRAIN, SAVE & EVAL
+        qa_experiment.run()
+        
+
+
+
+# Hypothesis 3 MetaQA with KGE+RoBERTa embeddings
+
+for gnn_model in GNN_MODELS:
+    for kge_model in [k for k in MetaQA_KG_EMBEDDINGS_PATH.keys() if k != 'roberta']:
+        
+        training_context = TrainingContext(
+                                info = f"Task: 1-hop MetaQA with {gnn_model.__name__}; node embeddings initialized with {kge_model}+RoBERTa",
+                                num_epochs = 2,
+                                learning_rate = 0.01,
+                                num_layers=2,
+                                dim_hidden_layer = 16,
+                                num_bases= None
+                                    )
+
+        data_context = QADataContext(   
+                                triples_path=MetaQA_CONFIG['KB_PATH'],
+                                entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
+                                properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
+                                LM_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH['roberta'],
+                                KG_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH[kge_model],
+                                training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TRAIN_PATH'],
+                                testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TEST_PATH'],
+                                training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_TRAIN_PATH'],
+                                testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_TEST_PATH'],
+                                training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_TRAIN_FILE_PATH'],
+                                testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_TEST_FILE_PATH'],
+                                is_vad_kb=False
+                                    )
+
+        qa_experiment = MetaQAExperiment(
+                training_context=training_context,
+                data_context=data_context,
+                model_type=gnn_model
+            )
+        # TRAIN, SAVE & EVAL
+        qa_experiment.run()
