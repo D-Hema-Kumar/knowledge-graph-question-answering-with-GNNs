@@ -29,7 +29,8 @@ from config.config import (
     QA_TRAINING_FILE_PATH,
     QA_TESTING_FILE_PATH,
     MetaQA_CONFIG,
-    MetaQA_KG_EMBEDDINGS_PATH
+    MetaQA_KG_EMBEDDINGS_PATH,
+    LM_EMBEDDINGS_PATH
 )
 from core.NeuralNet.MLP import MLP
 from core.NeuralNet.GNN import GCN, RGCN, RGAT
@@ -225,10 +226,10 @@ qa_experiment = QAExperiment(
 # TRAIN, SAVE & EVAL
 qa_experiment.run() 
 '''
-
 '''
+
 for gnn_model in GNN_MODELS:
-    for kg_model  in KG_EMBEDDINGS_PATH.keys():
+    for kg_model  in ["gpt2"]:
         
         training_context = TrainingContext(info = f"Task: QA with {gnn_model.__name__}; node embeddings initialized with {kg_model}",
                                     num_epochs = 20,
@@ -241,12 +242,12 @@ for gnn_model in GNN_MODELS:
         data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
                             entities_labels_path = ENTITIES_LABELS_PATH_OLD,
                             properties_labels_path = PROPERTIES_LABELS_PATH_OLD,
-                            LM_embeddings_path = None,
-                            KG_embeddings_path = KG_EMBEDDINGS_PATH[kg_model],
+                            LM_embeddings_path = LM_EMBEDDINGS_PATH[kg_model],
+                            KG_embeddings_path = None,
                             training_questions_concepts_answers_file_path=QA_TRAINING_FILE_PATH,
                             testing_questions_concepts_answers_file_path=QA_TESTING_FILE_PATH,
-                            training_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH,
-                            testing_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH)
+                            training_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH['gpt2'],
+                            testing_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH['gpt2'])
 
 
         qa_experiment = QAExperiment(
@@ -260,7 +261,7 @@ for gnn_model in GNN_MODELS:
 '''
 #3 Hypothesis 3 -- Embeddings with LM + KGE Models
 '''
-training_context = TrainingContext(info = "Task: QA with GCN; node embeddings initialized with RoBERTa+DistMult",
+training_context = TrainingContext(info = "Task: QA with GCN on VAD data; node embeddings initialized with roberta",
                                    num_epochs = 20,
                                    learning_rate = 0.01,
                                    num_layers=2,
@@ -272,7 +273,7 @@ data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
                            entities_labels_path = ENTITIES_LABELS_PATH_OLD,
                            properties_labels_path = PROPERTIES_LABELS_PATH_OLD,
                            LM_embeddings_path = GRAPH_EMBEDDINGS_PATH_OLD,
-                           KG_embeddings_path = KG_EMBEDDINGS_PATH['distmult'],
+                           KG_embeddings_path = None,
                            training_questions_concepts_answers_file_path=QA_TRAINING_FILE_PATH,
                            testing_questions_concepts_answers_file_path=QA_TESTING_FILE_PATH,
                            training_questions_embeddings_path = QUESTIONS_EMBEDDINGS_PATH,
@@ -282,7 +283,7 @@ data_context = QADataContext(triples_path = TRIPLES_PATH_OLD,
 qa_experiment = QAExperiment(
     training_context=training_context,
     data_context=data_context,
-    model_type=GCN
+    model_type=RGCN
 )
 # TRAIN, SAVE & EVAL
 qa_experiment.run() 
@@ -357,10 +358,8 @@ qa_experiment.run()
 
 # Hypothesis 2 MetaQA with only KGE embeddings
 
-
-
 for gnn_model in GNN_MODELS:
-    for kge_model in [k for k in MetaQA_KG_EMBEDDINGS_PATH.keys() if k != 'roberta']:
+    for kge_model in ['gpt2']:
         
         training_context = TrainingContext(info = f"Task: 1-hop MetaQA with {gnn_model.__name__}; node embeddings initialized with {kge_model}",
                                         num_epochs = 2,
@@ -377,10 +376,44 @@ for gnn_model in GNN_MODELS:
                                         LM_embeddings_path=None,
                                         training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TRAIN_PATH'],
                                         testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TEST_PATH'],
-                                        training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_TRAIN_PATH'],
-                                        testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_TEST_PATH'],
+                                        training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_GPT2_EMBEDDINGS_1_HOP_TRAIN_PATH'],
+                                        testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_GPT2_EMBEDDINGS_1_HOP_TEST_PATH'],
                                         training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_TRAIN_FILE_PATH'],
                                         testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_TEST_FILE_PATH'],
+                                        is_vad_kb=False
+                                    )
+
+        qa_experiment = MetaQAExperiment(
+                training_context=training_context,
+                data_context=data_context,
+                model_type=gnn_model
+            )
+        # TRAIN, SAVE & EVAL
+        qa_experiment.run()
+
+
+for gnn_model in GNN_MODELS:
+    for kge_model in ['gpt2']:
+        
+        training_context = TrainingContext(info = f"Task: 2-hop MetaQA with {gnn_model.__name__}; node embeddings initialized with {kge_model}",
+                                        num_epochs = 5,
+                                        learning_rate = 0.01,
+                                        num_layers=3,
+                                        dim_hidden_layer = 16,
+                                        num_bases= None
+                                            )
+
+        data_context = QADataContext(   triples_path=MetaQA_CONFIG['KB_PATH'],
+                                        entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
+                                        properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
+                                        KG_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH[kge_model],
+                                        LM_embeddings_path=None,
+                                        training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TRAIN_PATH'],
+                                        testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TEST_PATH'],
+                                        training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_GPT2_EMBEDDINGS_2_HOP_TRAIN_PATH'],
+                                        testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_GPT2_EMBEDDINGS_2_HOP_TEST_PATH'],
+                                        training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_2_HOP_TRAIN_FILE_PATH'],
+                                        testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_2_HOP_TEST_FILE_PATH'],
                                         is_vad_kb=False
                                     )
 
@@ -398,11 +431,11 @@ for gnn_model in GNN_MODELS:
 # Hypothesis 3 MetaQA with KGE+RoBERTa embeddings
 
 for gnn_model in GNN_MODELS:
-    for kge_model in [k for k in MetaQA_KG_EMBEDDINGS_PATH.keys() if k != 'roberta']:
+    for kge_model in [k for k in MetaQA_KG_EMBEDDINGS_PATH.keys() if k != 'gpt2' and k !='roberta']:
         
         training_context = TrainingContext(
-                                info = f"Task: 1-hop MetaQA with {gnn_model.__name__}; node embeddings initialized with {kge_model}+RoBERTa",
-                                num_epochs = 2,
+                                info = f"Task: 1-hop MetaQA with {gnn_model.__name__}; node embeddings initialized with {kge_model}+GPT2",
+                                num_epochs = 5,
                                 learning_rate = 0.01,
                                 num_layers=2,
                                 dim_hidden_layer = 16,
@@ -413,14 +446,49 @@ for gnn_model in GNN_MODELS:
                                 triples_path=MetaQA_CONFIG['KB_PATH'],
                                 entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
                                 properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
-                                LM_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH['roberta'],
+                                LM_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH['gpt2'],
                                 KG_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH[kge_model],
                                 training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TRAIN_PATH'],
                                 testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TEST_PATH'],
-                                training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_TRAIN_PATH'],
-                                testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_TEST_PATH'],
+                                training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_GPT2_EMBEDDINGS_1_HOP_TRAIN_PATH'],
+                                testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_GPT2_EMBEDDINGS_1_HOP_TEST_PATH'],
                                 training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_TRAIN_FILE_PATH'],
                                 testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_TEST_FILE_PATH'],
+                                is_vad_kb=False
+                                    )
+
+        qa_experiment = MetaQAExperiment(
+                training_context=training_context,
+                data_context=data_context,
+                model_type=gnn_model
+            )
+        # TRAIN, SAVE & EVAL
+        qa_experiment.run()
+
+for gnn_model in GNN_MODELS:
+    for kge_model in [k for k in MetaQA_KG_EMBEDDINGS_PATH.keys() if k != 'gpt2' and k !='roberta']:
+        
+        training_context = TrainingContext(
+                                info = f"Task: 2-hop MetaQA with {gnn_model.__name__}; node embeddings initialized with {kge_model}+GPT2",
+                                num_epochs = 5,
+                                learning_rate = 0.01,
+                                num_layers=3,
+                                dim_hidden_layer = 16,
+                                num_bases= None
+                                    )
+
+        data_context = QADataContext(   
+                                triples_path=MetaQA_CONFIG['KB_PATH'],
+                                entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
+                                properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
+                                LM_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH['gpt2'],
+                                KG_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH[kge_model],
+                                training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TRAIN_PATH'],
+                                testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TEST_PATH'],
+                                training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_GPT2_EMBEDDINGS_2_HOP_TRAIN_PATH'],
+                                testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_GPT2_EMBEDDINGS_2_HOP_TEST_PATH'],
+                                training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_2_HOP_TRAIN_FILE_PATH'],
+                                testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_2_HOP_TEST_FILE_PATH'],
                                 is_vad_kb=False
                                     )
 

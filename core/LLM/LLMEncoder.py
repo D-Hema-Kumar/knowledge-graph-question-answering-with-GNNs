@@ -10,27 +10,35 @@ from config.config import (
     GRAPH_EMBEDDINGS_PATH, 
     ENTITIES_LABELS_PATH,
     QUESTIONS_CONCEPTS_ANSWERS_PATH,
-    MetaQA_CONFIG
+    MetaQA_CONFIG,
+    LM_EMBEDDINGS_PATH,
+    QUESTIONS_EMBEDDINGS_PATH,
+    MetaQA_KG_EMBEDDINGS_PATH,
+    ENTITIES_LABELS_PATH_OLD,
+    PROPERTIES_LABELS_PATH_OLD
 )
+
+
 
 class LLMEncoder:
     def __init__(self, tokenizer, model):
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.tokenizer = tokenizer
-        self.model = model
+        self.model = model.to(self.device)
 
     def encode_sentence(self, input_sentence):
         """
         Encode the given sentence using the language model.
         """
         tokens = self.tokenizer.encode(input_sentence, add_special_tokens=True)
-        input_ids = torch.tensor([tokens])
+        input_ids = torch.tensor([tokens]).to(self.device)
         with torch.no_grad():
             outputs = self.model(input_ids)
         cls_token_representation = outputs.last_hidden_state[:, 0, :]
         normalized_representation = torch.nn.functional.normalize(
             cls_token_representation
         )
-        return normalized_representation.numpy()[0]
+        return normalized_representation.cpu().numpy()[0]
 
     def generate_encodings_dict(self, list_input_sentences):
         """
@@ -112,48 +120,65 @@ class LLMEncoder:
         self.save_encodings(encodings, os.path.join(base_path, "entities"))
 
 if __name__ == "__main__":
-    from transformers import RobertaTokenizer, RobertaModel
+    #from transformers import RobertaTokenizer, RobertaModel
 
-    tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
-    model = RobertaModel.from_pretrained("roberta-base")
+    #tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
+    #model = RobertaModel.from_pretrained("roberta-base")
+
+    from transformers import GPT2Tokenizer, GPT2Model
+    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+    model = GPT2Model.from_pretrained("gpt2")
     llm_encoder = LLMEncoder(tokenizer, model)
-    #llm_encoder.generate_encodings_for_entities_labels(
-    #    entities_labels_path=ENTITIES_LABELS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
-    # )
+
+    #Encode VAD QA
+    llm_encoder.generate_encodings_for_entities_labels(
+        entities_labels_path=ENTITIES_LABELS_PATH_OLD,
+        base_path=LM_EMBEDDINGS_PATH['gpt2'],
+        vad_kb=True
+     )
     #llm_encoder.generate_encodings_for_entities_context(
     #    entities_labels_path=ENTITIES_LABELS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
     # )
-    #llm_encoder.generate_encodings_for_properties_labels(
-    #    properties_labels_path=PROPERTIES_LABELS_PATH,
-    #    base_path=GRAPH_EMBEDDINGS_PATH,
-    # )
-    #llm_encoder.generate_encodings_for_questions(
-    #    question_answers_path=QUESTIONS_CONCEPTS_ANSWERS_PATH, base_path=GRAPH_EMBEDDINGS_PATH
-    #)
+    llm_encoder.generate_encodings_for_properties_labels(
+        properties_labels_path=PROPERTIES_LABELS_PATH_OLD,
+        base_path=LM_EMBEDDINGS_PATH['gpt2'],
+     )
+    llm_encoder.generate_encodings_for_questions(
+        question_answers_path=QUESTIONS_CONCEPTS_ANSWERS_PATH,
+        base_path=QUESTIONS_EMBEDDINGS_PATH['gpt2'],
+    )
     
-    # Encode MetaQA
-    '''
+    # Encode MetaQA KG
+    
     llm_encoder.generate_encodings_for_entities_labels(
         entities_labels_path=MetaQA_CONFIG["ENTITIES_LABELS_PATH"],
-        base_path=MetaQA_CONFIG["GRAPH_EMBEDDINGS_PATH"],
+        base_path=MetaQA_KG_EMBEDDINGS_PATH['gpt2'],
         vad_kb=False
      )
     llm_encoder.generate_encodings_for_properties_labels(
         properties_labels_path=MetaQA_CONFIG["PROPERTIES_LABELS_PATH"],
-        base_path=MetaQA_CONFIG["GRAPH_EMBEDDINGS_PATH"],
+        base_path=MetaQA_KG_EMBEDDINGS_PATH['gpt2'],
      )
-     '''
+     
+    # Encode 1 hop MetaQA Qs
     llm_encoder.generate_encodings_for_questions(
-        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_2_HOP_DEV_PATH"], 
-        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_2_HOP_DEV_PATH"]
+        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TRAIN_PATH"], 
+        base_path=MetaQA_CONFIG["QUESTIONS_GPT2_EMBEDDINGS_1_HOP_TRAIN_PATH"]
     )
+
+    llm_encoder.generate_encodings_for_questions(
+        question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_1_HOP_TEST_PATH"], 
+        base_path=MetaQA_CONFIG["QUESTIONS_GPT2_EMBEDDINGS_1_HOP_TEST_PATH"]
+    )
+
+    # Encode 2 hop MetaQA Qs
     llm_encoder.generate_encodings_for_questions(
         question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TRAIN_PATH"], 
-        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_2_HOP_TRAIN_PATH"]
+        base_path=MetaQA_CONFIG["QUESTIONS_GPT2_EMBEDDINGS_2_HOP_TRAIN_PATH"]
     )
 
     llm_encoder.generate_encodings_for_questions(
         question_answers_path=MetaQA_CONFIG["QUESTIONS_CONCEPTS_ANSWERS_2_HOP_TEST_PATH"], 
-        base_path=MetaQA_CONFIG["QUESTIONS_EMBEDDINGS_2_HOP_TEST_PATH"]
+        base_path=MetaQA_CONFIG["QUESTIONS_GPT2_EMBEDDINGS_2_HOP_TEST_PATH"]
     )
 
