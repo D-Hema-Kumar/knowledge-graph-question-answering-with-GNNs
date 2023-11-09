@@ -325,7 +325,7 @@ for gnn_model in GNN_MODELS:
 
 '''
 # QA MetaQA Experiments
-'''
+
 training_context = TrainingContext(info = "Task: MetaQA with GNN",
                                    num_epochs = 2,
                                    learning_rate = 0.01,
@@ -337,7 +337,8 @@ training_context = TrainingContext(info = "Task: MetaQA with GNN",
 data_context = QADataContext(   triples_path=MetaQA_CONFIG['KB_PATH'],
                                 entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
                                 properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
-                                graph_embeddings_path=MetaQA_CONFIG['GRAPH_EMBEDDINGS_PATH'],
+                                KG_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH['roberta'],
+                                LM_embeddings_path=None,
                                 training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
                                 testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
                                 training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH'],
@@ -354,10 +355,10 @@ qa_experiment = MetaQAExperiment(
     )
 # TRAIN, SAVE & EVAL
 qa_experiment.run()
-'''
+
 
 # Hypothesis 2 MetaQA with only KGE embeddings
-
+'''
 for gnn_model in GNN_MODELS:
     for kge_model in ['gpt2']:
         
@@ -499,3 +500,154 @@ for gnn_model in GNN_MODELS:
             )
         # TRAIN, SAVE & EVAL
         qa_experiment.run()
+'''
+
+######################################################################### RUN BELOW FOR EVALUATION OF THESIS  ####################################################### 
+
+# Example QA pipeline Run For Thesis Evaluation on Dev dataset
+
+'''Below Code runs the end to end pipeline for the 3 research questions below on Dev data because the training dataset and the subgraph file for the 
+training dataset are very large to be stored on a USB stick:
+
+RQ1: How do the embeddings obtained by a pre-trained LMs (RoBERTa and GPT2) from entity descriptions in a KG help in classifying an entity as being the answer for a given question Q?
+RQ2: How do the embeddings obtained from TransE, ComplEx, and DistMult models impact the reasoning abilities of various GNN architecture types?
+RQ3: How do the combined embeddings (one of RoBERTa and GPT2 and one of TransE, ComplEx, and DistMult) embeddings affect the performance of the QA system?
+'''
+
+#RQ1 : RoBERTa embedding on GCN
+'''
+KG used : MetaQA
+QA Training Dataset : 1-Hop MetaQA Dev
+QA Testing Dataset : 1-Hop MetaQA Dev
+
+LM Embedding from : RoBERTa
+KGE Embedding : None
+GNN Model : GCN
+'''
+# Comment/Uncomment below line
+''' 
+training_context = TrainingContext(info = "Task: MetaQA 1-hop on Dev data with GCN initialized with RoBERTa embedding",
+                                   num_epochs = 2,
+                                   learning_rate = 0.01,
+                                   num_layers=2,
+                                   dim_hidden_layer = 16,
+                                   num_bases= None
+                                    )
+
+data_context = QADataContext(   triples_path=MetaQA_CONFIG['KB_PATH'],
+                                entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
+                                properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
+                                KG_embeddings_path=None,
+                                LM_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH['roberta'],
+                                training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
+                                testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
+                                training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH'],
+                                testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH'],
+                                training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_DEV_FILE_PATH'],
+                                testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_DEV_FILE_PATH'],
+                                is_vad_kb=False
+                            )
+
+qa_experiment = MetaQAExperiment(
+        training_context=training_context,
+        data_context=data_context,
+        model_type=GCN
+    )
+# TRAIN, SAVE & EVAL
+qa_experiment.run()
+
+# Comment/Uncomment below line
+'''
+
+# RQ2: How do the embeddings obtained from DistMult model affect the performance of the QA system?
+
+'''
+KG used : MetaQA
+QA Training Dataset : 1-Hop MetaQA Dev
+QA Testing Dataset : 1-Hop MetaQA Dev
+
+LM Embedding from : None
+KGE Embedding : DistMult
+GNN Model : GCN
+'''
+
+# Comment/Uncomment below line
+# '''
+training_context = TrainingContext(info = "Task: MetaQA 1-hop on Dev data with GCN initialized with DistMult embedding",
+                                   num_epochs = 2,
+                                   learning_rate = 0.01,
+                                   num_layers=2,
+                                   dim_hidden_layer = 16,
+                                   num_bases= None
+                                    )
+
+data_context = QADataContext(   triples_path=MetaQA_CONFIG['KB_PATH'],
+                                entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
+                                properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
+                                KG_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH['distmult'],
+                                LM_embeddings_path=None,
+                                training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
+                                testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
+                                training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH'],
+                                testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH'],
+                                training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_DEV_FILE_PATH'],
+                                testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_DEV_FILE_PATH'],
+                                is_vad_kb=False
+                            )
+
+qa_experiment = MetaQAExperiment(
+        training_context=training_context,
+        data_context=data_context,
+        model_type=GCN
+    )
+# TRAIN, SAVE & EVAL
+qa_experiment.run()
+# Comment/Uncomment below line
+# '''
+
+# RQ3: How do the combined embeddings (RoBERTa and DistMult) embeddings affect the performance of the QA system?
+
+'''
+KG used : MetaQA
+QA Training Dataset : 1-Hop MetaQA Dev
+QA Testing Dataset : 1-Hop MetaQA Dev
+
+LM Embedding from : RoBERTa
+KGE Embedding : DistMult
+GNN Model : GCN
+'''
+
+# Comment/Uncomment below line
+# '''
+training_context = TrainingContext(info = "Task: MetaQA 1-hop on Dev data with GCN initialized with DistMult+RoBERTa embedding",
+                                   num_epochs = 2,
+                                   learning_rate = 0.01,
+                                   num_layers=2,
+                                   dim_hidden_layer = 16,
+                                   num_bases= None
+                                    )
+
+data_context = QADataContext(   triples_path=MetaQA_CONFIG['KB_PATH'],
+                                entities_labels_path=MetaQA_CONFIG['ENTITIES_LABELS_PATH'],
+                                properties_labels_path=MetaQA_CONFIG['PROPERTIES_LABELS_PATH'],
+                                KG_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH['distmult'],
+                                LM_embeddings_path=MetaQA_KG_EMBEDDINGS_PATH['roberta'],
+                                training_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
+                                testing_questions_concepts_answers_file_path = MetaQA_CONFIG['QUESTIONS_CONCEPTS_ANSWERS_1_HOP_DEV_PATH'],
+                                training_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH'],
+                                testing_questions_embeddings_path = MetaQA_CONFIG['QUESTIONS_EMBEDDINGS_1_HOP_DEV_PATH'],
+                                training_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_DEV_FILE_PATH'],
+                                testing_subgraphs_file_path = MetaQA_CONFIG['SUBGRAPHS_1_HOP_DEV_FILE_PATH'],
+                                is_vad_kb=False
+                            )
+
+qa_experiment = MetaQAExperiment(
+        training_context=training_context,
+        data_context=data_context,
+        model_type=GCN
+    )
+# TRAIN, SAVE & EVAL
+qa_experiment.run()
+# Comment/Uncomment below
+# '''
+
