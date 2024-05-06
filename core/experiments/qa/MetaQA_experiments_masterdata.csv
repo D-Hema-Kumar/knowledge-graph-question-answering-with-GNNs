@@ -683,3 +683,11 @@ time_stamp,info,Epochs,Learning Rate,hidden_dimension,num_layers,num_bases,Model
     (3): GCNConv(16, 2)
   )
 )",0.26799454486133023,0.17022959883790575,0.9905674539631706,0.35558446757405926,0.6327061649319455,0.7863290632506005,0.45317122932878706,0.35558446757405926,0.30284227381905526,0.25242193755004005,0.1872069129037357,0.4783181411033247,0.6644712577058854,./core/experiments/qa/results\20231109163746,./data/MetaQA/source_data/kb.txt,./data/MetaQA/source_data/kb_entities.csv,./data/MetaQA/source_data/kb_properties.txt,./data/MetaQA/graph_embeddings/roberta,./data/MetaQA/graph_embeddings/distmult,data/MetaQA/source_data/one-hop/qca_dev.csv,data/MetaQA/source_data/one-hop/qca_dev.csv
+2023:11:13 17:16:31,Task: MetaQA 1-hop on Dev data with GCN initialized with RoBERTa embedding,2,0.01,16,2,,"GCN(
+  (layers): ModuleList(
+    (0): GCNConv(1536, 16)
+    (1): ReLU()
+    (2): Dropout(p=0.2, inplace=False)
+    (3): GCNConv(16, 2)
+  )
+)",0.37762714088689187,0.2625542216929914,0.9999749799839872,0.34947958366693355,0.641613290632506,0.7952361889511609,0.4569008226271529,0.34947958366693355,0.3039431545236189,0.2517814251401121,0.183992834185152,0.48005690500026343,0.6627851836240055,./core/experiments/qa/results\20231113164228,./data/MetaQA/source_data/kb.txt,./data/MetaQA/source_data/kb_entities.csv,./data/MetaQA/source_data/kb_properties.txt,./data/MetaQA/graph_embeddings/roberta,,data/MetaQA/source_data/one-hop/qca_dev.csv,data/MetaQA/source_data/one-hop/qca_dev.csv

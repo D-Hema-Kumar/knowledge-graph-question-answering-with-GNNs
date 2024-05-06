@@ -325,7 +325,7 @@ for gnn_model in GNN_MODELS:
 
 '''
 # QA MetaQA Experiments
-
+'''
 training_context = TrainingContext(info = "Task: MetaQA with GNN",
                                    num_epochs = 2,
                                    learning_rate = 0.01,
@@ -355,7 +355,7 @@ qa_experiment = MetaQAExperiment(
     )
 # TRAIN, SAVE & EVAL
 qa_experiment.run()
-
+'''
 
 # Hypothesis 2 MetaQA with only KGE embeddings
 '''
@@ -525,7 +525,7 @@ KGE Embedding : None
 GNN Model : GCN
 '''
 # Comment/Uncomment below line
-''' 
+#''' 
 training_context = TrainingContext(info = "Task: MetaQA 1-hop on Dev data with GCN initialized with RoBERTa embedding",
                                    num_epochs = 2,
                                    learning_rate = 0.01,
@@ -557,7 +557,7 @@ qa_experiment = MetaQAExperiment(
 qa_experiment.run()
 
 # Comment/Uncomment below line
-'''
+#'''
 
 # RQ2: How do the embeddings obtained from DistMult model affect the performance of the QA system?
 
@@ -572,7 +572,7 @@ GNN Model : GCN
 '''
 
 # Comment/Uncomment below line
-# '''
+'''
 training_context = TrainingContext(info = "Task: MetaQA 1-hop on Dev data with GCN initialized with DistMult embedding",
                                    num_epochs = 2,
                                    learning_rate = 0.01,
@@ -603,7 +603,7 @@ qa_experiment = MetaQAExperiment(
 # TRAIN, SAVE & EVAL
 qa_experiment.run()
 # Comment/Uncomment below line
-# '''
+'''
 
 # RQ3: How do the combined embeddings (RoBERTa and DistMult) embeddings affect the performance of the QA system?
 
@@ -615,10 +615,11 @@ QA Testing Dataset : 1-Hop MetaQA Dev
 LM Embedding from : RoBERTa
 KGE Embedding : DistMult
 GNN Model : GCN
+
 '''
 
 # Comment/Uncomment below line
-# '''
+'''
 training_context = TrainingContext(info = "Task: MetaQA 1-hop on Dev data with GCN initialized with DistMult+RoBERTa embedding",
                                    num_epochs = 2,
                                    learning_rate = 0.01,
@@ -649,5 +650,5 @@ qa_experiment = MetaQAExperiment(
 # TRAIN, SAVE & EVAL
 qa_experiment.run()
 # Comment/Uncomment below
-# '''
+ '''
 
