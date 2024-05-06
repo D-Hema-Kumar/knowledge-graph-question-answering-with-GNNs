@@ -24,8 +24,8 @@ The below figure shows how the KGQA system is structured on a high level:
 ## Data
 To train the KGQA system, the user needs data as below:
 
-* KG in the form of triples in a csv file (data\source_data_old\VAD_triples.csv), entities and properties with their corresponding labels (data\source_data_old\VAD_entities_labels.csv)
-* QA training and testing dataset as structured like in the file (data\source_data_old\qa_training_data.csv)
+* KG in the form of triples in a csv file (data\MetaQA\source_data\kb.txt), entities and properties with their corresponding labels (data\MetaQA\source_data\kb_entities.txt,data\MetaQA\source_data\kb_properties.txt )
+* QA training and testing dataset as structured like in the file (data\MetaQA\source_data\one-hop\qca_train.csv)
 * Subgraph information : This file is generated using the core\Q_subgraphs\QuestionSubgraphs.py file. It generates the subgraph for a given question and stores the results in the user provided location. For example, 1-Hop MetaQA dev subgraphs are stored at:  data\MetaQA\source_data\one-hop\dev_subgraphs.npz
 
 ## Graph And Question Embeddings
@@ -49,7 +49,6 @@ pipenv run python main.py
 The corresponding data for the experiments for the QA tasks are stored :
 
 * Trained Models at : core\experiments\qa\results
-* Experiment results for VAD-QA at : core\experiments\qa\qa_experiments_masterdata.csv
 * Experiment results for MetaQA at : core\experiments\qa\MetaQA_experiments_masterdata.csv
 
 # Running the Code
