@@ -1,0 +1,10 @@
+predicate,label
+directed_by,directed by
+written_by,written by
+starred_actors,starred actors
+release_year,release year
+in_language,in language
+has_tags,has tags
+has_genre,has genre
+has_imdb_votes,has imdb votes
+has_imdb_rating,has imdb rating
