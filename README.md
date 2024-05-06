@@ -5,7 +5,7 @@ This is a repository developed for implementing the knowledge graph Question and
 * RQ2: How do the embeddings obtained from TransE, ComplEx, and DistMult models impact the reasoning abilities of various GNN architecture types?
 * RQ3: How do the combined embeddings (one of RoBERTa and GPT2 and one of TransE, ComplEx, and DistMult) embeddings affect the performance of the QA system?
 
-![Alt text](images\training_workflow.png "KGQA Pipeline")
+![Alt text]([images\training_workflow.png](https://github.com/D-Hema-Kumar/knowledge-graph-question-answering-with-GNNs/blob/main/images/training_workflow.png?raw=true) "KGQA Pipeline")
 
 The below figure shows how the KGQA system is structured on a high level:
 
