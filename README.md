@@ -10,7 +10,7 @@ This is a repository developed for implementing the knowledge graph Question and
 
 The below figure shows how the KGQA system is structured on a high level:
 
-![Alt text](images\QA_system.png "KGQA Pipeline")
+![Image Alt text](https://github.com/D-Hema-Kumar/knowledge-graph-question-answering-with-GNNs/blob/main/images/QA_system.png)
 
 ## Thesis Summary
 
