@@ -1,4 +1,4 @@
-# psmg-imkg-gnn-qa
+# Knowledge Graph Question and Answering system (KGQA) using Graph Neural Networks (GNNs)
 This is a repository developed for implementing the knowledge graph Question and Answering system (KGQA) using Graph Neural Networks (GNNs). The thesis is based on the below research questions:
 
 * RQ1: How do the embeddings obtained by a pre-trained LMs (RoBERTa and GPT2) from entity descriptions in a KG help in classifying an entity as being the answer for a given question Q?
